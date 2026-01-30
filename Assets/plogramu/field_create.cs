@@ -22,8 +22,8 @@ public class field_create : MonoBehaviour
             {
 
                 Vector2 pos = new Vector2(0.0f, 0.0f);
-                pos.x += i*100f;
-                pos.y += j*100f;
+                pos.x += i;
+                pos.y += j;
                 GameObject obj;
                 obj = Instantiate(background, parent);
                 obj.transform.position = pos;
