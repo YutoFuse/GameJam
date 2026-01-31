@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -33,13 +34,27 @@ public class field_create : MonoBehaviour
                 obj.transform.localPosition = pos;
 
                 Debug.Log("OK");
-                face view = obj.GetComponentInChildren<face>();
-
-                //view.image.sprite = sprites[2];
 
                 eria[i, j] = 1;
                 eriaCount++;
+
                 faces[i, j] = obj;
+                face img = faces[i, j].GetComponentInChildren<face>();
+
+                if (img == null)
+                {
+                    Debug.LogError("face ‚ªæ“¾‚Å‚«‚Ä‚¢‚Ü‚¹‚ñ");
+                    continue;
+                }
+
+                if (img.tekusutya == null)
+                {
+                    Debug.LogError("tekusutya ‚ª Inspector ‚Åİ’è‚³‚ê‚Ä‚¢‚Ü‚¹‚ñ");
+                    continue;
+                }
+                
+                img.tekusutya.sprite= sprites[eriaCount];
+
             }
         }
 

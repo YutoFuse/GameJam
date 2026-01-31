@@ -565,7 +565,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f7bf5738056777942a13f2421d9cb83a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::field_create
-  sprites: []
+  sprites:
+  - {fileID: 4161603384465051721, guid: cbefa3c54655ed143a9abbdb7a9ba83e, type: 3}
+  - {fileID: 9115781969662094070, guid: 8065d49be02c9a94bad747b48a9180d5, type: 3}
+  - {fileID: 6205630551632167208, guid: d9e6e0c68b4325a438c19a5eae8bcca1, type: 3}
+  - {fileID: -4436041991744855875, guid: e2b51e99219873b439e8c8929758a3d8, type: 3}
+  - {fileID: -856687976272733875, guid: d099303746ad50f4abede01ec1520ac8, type: 3}
+  - {fileID: -5970215472531593620, guid: 29c3da5ec8094914390d794af63893b1, type: 3}
+  - {fileID: -800073341941790581, guid: 44a8d9690c61cf540a8581a0c37319ef, type: 3}
+  - {fileID: -7497997070969409475, guid: c7e9e3d42bf92d74386d0e3bbadc54f8, type: 3}
+  - {fileID: 2461634614019007510, guid: 3ebe5d06f9170eb47a096a0e6237414a, type: 3}
+  - {fileID: 1852395002410996566, guid: 01e2200e09672004aba7b4fbbfafdf52, type: 3}
+  - {fileID: -570033773368163849, guid: 755f352c6d028b3408cc7f42ef5d47f3, type: 3}
+  - {fileID: -8459811855359800929, guid: 67d2435ae7f12114fa25e5b8260ad933, type: 3}
+  - {fileID: 6077126389642723049, guid: 72e17ea8b6abeeb449471aa6da5e9c84, type: 3}
+  - {fileID: -3955805847875446450, guid: 99a1170fe96f96f43941ab21e1b9e251, type: 3}
+  - {fileID: -5442052600350638523, guid: 247eaba3d1407b34a835c4bb5ec96bf4, type: 3}
+  - {fileID: 773982028625776978, guid: 00bb8dac270d83c4f97679623d33a70e, type: 3}
+  - {fileID: 0}
+  - {fileID: 0}
   background: {fileID: 5070177607569461093, guid: 91637c06353b7fa4ab73b7dac28f3fe6, type: 3}
   parent: {fileID: 887219264}
 --- !u!4 &1466791600
