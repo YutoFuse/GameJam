@@ -1,14 +1,16 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class deta_retu : MonoBehaviour
 {
+    int stage_now = 0;
     public int[][] stages =
     {
         new int[] //stage1‚Ì•Ï”
         {
-            2, 3, 1,
-            1, 4, 1,
-            6, 5, 7
+            0, 0, 1,
+            1, 1, 1,
+            0, 0, 1
         },
         new int[] //stage2‚Ì•Ï”
         {
@@ -33,6 +35,7 @@ public class deta_retu : MonoBehaviour
     private void Start()
     {
         int stage = 1;
+        stage_now = stage;
         deta_shuuto(stage-1);//stage
     }
 
