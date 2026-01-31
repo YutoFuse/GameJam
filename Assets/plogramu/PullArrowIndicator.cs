@@ -5,6 +5,8 @@ using UnityEngine.InputSystem;
 public class PullArrowIndicator : MonoBehaviour
 {
     public enum DragDirection { None, Up, Down, Left, Right }
+    public int[] numberx;
+    public int[] numbery;
 
     [System.Serializable]
     public class PullReleasedEvent : UnityEvent<PullArrowIndicator, DragDirection> { }
@@ -78,12 +80,15 @@ public class PullArrowIndicator : MonoBehaviour
         // 押した：ownerCollider内だけ開始
         if (!dragging && Mouse.current.leftButton.wasPressedThisFrame)
         {
+
             Vector3 mouseWorld = GetMouseWorld();
             if (ownerCollider != null && ownerCollider.OverlapPoint(mouseWorld))
             {
                 dragging = true;
                 Show(true);
                 UpdateArrow(mouseWorld);
+
+      
             }
         }
 
@@ -103,6 +108,8 @@ public class PullArrowIndicator : MonoBehaviour
             Show(false);
 
             OnReleased?.Invoke(this, dir);
+
+            Debug.Log("X座標"+numberx+"Y座標"+numbery);
         }
     }
 
