@@ -55,8 +55,9 @@ public class MaskStockUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
     {
         Debug.Log($"[MaskStockUI] OnEndDrag called dragging={dragging} currentMask={(currentMask ? currentMask.name : "NULL")}");
 
-        var snap = currentMask.GetComponent<MaskSnapper>();
-        if (snap != null) snap.TrySnap();
+        bool snapped = false;
+        var snap = currentMask != null ? currentMask.GetComponent<MaskSnapper>() : null;
+        if (snap != null) snapped = snap.TrySnap();
 
         if (!dragging) return;
 
@@ -64,16 +65,20 @@ public class MaskStockUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
 
         if (currentMask != null)
         {
-            // とりあえず「離したら在庫-1」仕様（成功/失敗判定は後で）
-            stock = Mathf.Max(0, stock - 1);
-            RefreshCountUI();
-
-            // 在庫0なら掴めないようにする（任意）
-            if (stock == 0)
+            if (snapped)
             {
-                // このUIをクリック不可にしたいならRaycastを切る
-                var img = GetComponent<Image>();
-                if (img != null) img.raycastTarget = false;
+                stock = Mathf.Max(0, stock - 1);
+                RefreshCountUI();
+
+                if (stock == 0)
+                {
+                    var img = GetComponent<Image>();
+                    if (img != null) img.raycastTarget = false;
+                }
+            }
+            else
+            {
+                Destroy(currentMask);
             }
 
             // ここでは currentMask は残す（場に置かれる）
