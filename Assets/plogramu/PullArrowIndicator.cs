@@ -303,6 +303,11 @@ public class PullArrowIndicator : MonoBehaviour
 
         fromFace.tekusutya.sprite = null;
         fromFace.tekusutya.enabled = false;
+
+        field_create create;
+        GameObject field = GameObject.Find("field_Maneger");
+        create = field.GetComponent<field_create>();
+
     }
 
     private Vector3 GetMouseWorld()

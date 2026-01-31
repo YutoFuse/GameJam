@@ -12,6 +12,7 @@ public class field_create : MonoBehaviour
     const int height = 3;
     const float cellSize = 1f;
 
+    public int total;
     [HideInInspector]
     public int[] spriteIndices;
 
@@ -28,7 +29,7 @@ public class field_create : MonoBehaviour
             Destroy(child.gameObject);
         }
 
-        int total = width * height;
+        total = width * height;
         if (spriteIndices == null || spriteIndices.Length != total)
         {
             Debug.LogError("spriteIndices が不正です");
