@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class NewMonoBehaviourScript1 : MonoBehaviour
+public class face : MonoBehaviour
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
