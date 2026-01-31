@@ -20,6 +20,12 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/field_kari.unity
     guid: 4434142a1df10f64c986de1d14db5532
+  - enabled: 1
+    path: Assets/Scenes/GameClearScene.unity
+    guid: 22161bce91064d44b9b1a9e7eb289009
+  - enabled: 1
+    path: Assets/Scenes/GameOverScene.unity
+    guid: f113c0f3b519abc4a88bc621b8a50e48
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   m_UseUCBPForAssetBundles: 0

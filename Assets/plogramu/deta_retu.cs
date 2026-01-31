@@ -6,9 +6,9 @@ public class deta_retu : MonoBehaviour
     {
         new int[] //stage1‚Ì•Ï”
         {
-            2, 3, 1,
-            1, 4, 1,
-            6, 5, 7
+            16, 16, 16,
+            16, 4, 1,
+            16, 16, 16
         },
         new int[] //stage2‚Ì•Ï”
         {
@@ -32,7 +32,7 @@ public class deta_retu : MonoBehaviour
     };
     private void Start()
     {
-        int stage = 1;
+        int stage = 2;
         deta_shuuto(stage-1);//stage
     }
 
