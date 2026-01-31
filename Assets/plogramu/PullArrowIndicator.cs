@@ -16,7 +16,7 @@ public class PullArrowIndicator : MonoBehaviour
     [SerializeField] private Transform owner;              // セルの中心（通常は親）
     [SerializeField] private Collider2D ownerCollider;     // セルのCollider2D（クリック開始判定）
 
-    [Tooltip("このTransform配下にあるColliderは“自分”として除外する（セルRoot推奨）")]
+    [Tooltip("このTransform配下にあるCollider/SpriteRendererを“自分”として扱う（セルRoot推奨）")]
     [SerializeField] private Transform ownerRoot;          // セルのルート（未設定ならownerを使う）
 
     [Header("Arrow Refs")]
@@ -42,7 +42,12 @@ public class PullArrowIndicator : MonoBehaviour
 
     [Header("Result Effect")]
     [SerializeField] private Color targetHitColor = Color.yellow;
+
+    [Tooltip("true: 消すとき Destroy / false: 非表示＆Collider無効化")]
     [SerializeField] private bool destroyOwner = false;
+
+    [Tooltip("true: ownerRootを丸ごとSetActive(false)（消し残りが絶対出ない）")]
+    [SerializeField] private bool deactivateOwnerRoot = true;
 
     [Header("Events")]
     public PullReleasedEvent OnReleased;
@@ -58,6 +63,7 @@ public class PullArrowIndicator : MonoBehaviour
     public Collider2D LastPointedCollider { get; private set; }
     public GameObject LastPointedObject => LastPointedCollider != null ? LastPointedCollider.gameObject : null;
 
+    public int sprite_number;
     void Awake()
     {
         cam = Camera.main;
@@ -70,8 +76,7 @@ public class PullArrowIndicator : MonoBehaviour
         }
 
         if (owner == null) owner = transform.parent;
-
-        if (ownerRoot == null) ownerRoot = owner; // まずはownerをセルroot扱い
+        if (ownerRoot == null) ownerRoot = owner;
 
         if (ownerCollider == null && owner != null)
             ownerCollider = owner.GetComponent<Collider2D>();
@@ -82,7 +87,13 @@ public class PullArrowIndicator : MonoBehaviour
         if (arrowRenderer != null && arrowRenderer.sprite != null)
             spriteWorldLengthX = arrowRenderer.sprite.bounds.size.x;
 
-        Show(false);
+        HideArrowHard();
+    }
+
+    void OnDisable()
+    {
+        // 途中で無効化されても矢印が残らない保険
+        HideArrowHard();
     }
 
     void Update()
@@ -98,6 +109,7 @@ public class PullArrowIndicator : MonoBehaviour
                 dragging = true;
                 Show(true);
                 UpdateArrow(mouseWorld);
+                Debug.Log(sprite_number);
             }
         }
 
@@ -117,7 +129,7 @@ public class PullArrowIndicator : MonoBehaviour
             LastPointedCollider = DetectNeighbor(dir);
 
             dragging = false;
-            Show(false);
+            HideArrowHard();
 
             OnReleased?.Invoke(this, dir);
             OnReleasedWithTarget?.Invoke(this, dir, LastPointedCollider);
@@ -131,10 +143,20 @@ public class PullArrowIndicator : MonoBehaviour
         center = (owner != null) ? owner.position : transform.position;
 
         Vector3 v = mouseWorld - center;
-        Vector3 dir = (v.sqrMagnitude < 0.0001f) ? Vector3.right : v.normalized;
+        float rawDist = v.magnitude;
+
+        // 見た目も deadZone 未満はほぼ出さない（残像対策にもなる）
+        if (rawDist < deadZone)
+        {
+            tipPos = center;
+            arrowSprite.localScale = new Vector3(0f, baseThickness, 1f);
+            return;
+        }
+
+        Vector3 dir = (rawDist < 0.0001f) ? Vector3.right : v / rawDist;
         if (invertDirection) dir = -dir;
 
-        float dist = Mathf.Clamp(v.magnitude, minLength, maxLength);
+        float dist = Mathf.Clamp(rawDist, minLength, maxLength);
         tipPos = center + dir * dist;
 
         float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg + angleOffsetDeg;
@@ -172,7 +194,6 @@ public class PullArrowIndicator : MonoBehaviour
             return (v.y >= 0f) ? DragDirection.Up : DragDirection.Down;
     }
 
-    // ★ここが重要：自分のコライダー外からCastして、自分以外の最初を取る
     private Collider2D DetectNeighbor(DragDirection dir)
     {
         Vector2 d = dir switch
@@ -201,7 +222,6 @@ public class PullArrowIndicator : MonoBehaviour
             origin = center + (Vector3)d * (rayRadius + 0.01f);
         }
 
-        // CastAllして「自分以外」を最優先で拾う
         RaycastHit2D[] hits = Physics2D.CircleCastAll(origin, rayRadius, d, cellStep, targetLayer);
         if (hits == null || hits.Length == 0) return null;
 
@@ -216,7 +236,6 @@ public class PullArrowIndicator : MonoBehaviour
         return null;
     }
 
-    // ownerCollider一致だけでなく「同じセル配下」を全部除外する
     private bool IsOwnerCollider(Collider2D c)
     {
         if (c == null) return false;
@@ -225,11 +244,8 @@ public class PullArrowIndicator : MonoBehaviour
 
         if (ownerRoot != null)
         {
-            // cがセルRoot配下にいるなら“自分”
             if (c.transform == ownerRoot) return true;
             if (c.transform.IsChildOf(ownerRoot)) return true;
-
-            // 逆方向も一応
             if (ownerRoot.IsChildOf(c.transform)) return true;
         }
 
@@ -247,30 +263,42 @@ public class PullArrowIndicator : MonoBehaviour
         if (dir == DragDirection.None) return;
         if (target == null) return;
 
-        // ターゲットの色を変える
-        var targetSR = target.GetComponent<SpriteRenderer>();
-        if (targetSR == null) targetSR = target.GetComponentInChildren<SpriteRenderer>();
-        if (targetSR != null) targetSR.color = targetHitColor;
+        // 移動元（ownerRoot配下）の face を取得
+        var ownerGO = (ownerRoot != null) ? ownerRoot.gameObject
+                : (owner != null) ? owner.gameObject
+                : gameObject;
 
-        // オーナー（セル）を消す
-        GameObject ownerGO = (ownerRoot != null) ? ownerRoot.gameObject
-                           : (owner != null) ? owner.gameObject
-                           : gameObject;
-
-        if (destroyOwner)
+        face fromFace = ownerGO.GetComponentInChildren<face>(true);
+        if (fromFace == null || fromFace.tekusutya == null)
         {
-            Destroy(ownerGO);
+            Debug.LogWarning("[PullArrowIndicator] 移動元の face / tekusutya が見つかりません", ownerGO);
             return;
         }
 
-        var ownerSR = ownerGO.GetComponent<SpriteRenderer>();
-        if (ownerSR == null) ownerSR = ownerGO.GetComponentInChildren<SpriteRenderer>();
-        if (ownerSR != null) ownerSR.enabled = false;
+        // 移動先（targetの親側にあるはず）の face を取得
+        face toFace = target.GetComponentInParent<face>();
+        if (toFace == null || toFace.tekusutya == null)
+        {
+            Debug.LogWarning("[PullArrowIndicator] 移動先の face / tekusutya が見つかりません", target.gameObject);
+            return;
+        }
 
-        // ownerColliderじゃなくてもセル配下のColliderをまとめて無効化したい場合
-        var cols = ownerGO.GetComponentsInChildren<Collider2D>();
-        for (int i = 0; i < cols.Length; i++) cols[i].enabled = false;
+        // ★ 見た目を移し替える
+        Sprite moved = fromFace.tekusutya.sprite;
+        // toFace.tekusutya.sprite = moved;
+        moved = toFace.tekusutya.sprite;
+
+        // ★ 移動元を空にする（好みで）
+        // 1) 顔だけ消したい（枠やセルは残す）
+        fromFace.tekusutya.sprite = null;
+        fromFace.tekusutya.enabled = false;
+
+        // ownerGO.SetActive(false);
+
+        // Destroyしたいなら（盤面管理と相談）
+        // if (destroyOwner) Destroy(ownerGO);
     }
+
 
     private Vector3 GetMouseWorld()
     {
@@ -284,5 +312,14 @@ public class PullArrowIndicator : MonoBehaviour
     private void Show(bool on)
     {
         if (arrowSprite != null) arrowSprite.gameObject.SetActive(on);
+    }
+
+    // 「Show(false)だけだと1フレーム残る」みたいな事故の保険
+    private void HideArrowHard()
+    {
+        dragging = false;
+        if (arrowSprite == null) return;
+        arrowSprite.gameObject.SetActive(false);
+        arrowSprite.localScale = new Vector3(0f, baseThickness, 1f);
     }
 }
