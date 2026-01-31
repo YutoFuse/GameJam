@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: e68aab31749321a4cb8b3c50aae6f033
+guid: 60522ce3abcc7ac4d98e87fe22492a7a
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -4801880918991456827
-    second: "\u30B9\u30AF\u30EA\u30FC\u30F3\u30B7\u30E7\u30C3\u30C8 2026-01-20 152244_0"
+      213: 5295352802968058502
+    second: Screen_Gameover_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -40,13 +40,13 @@ TextureImporter:
     filterMode: 1
     aniso: 1
     mipBias: 0
-    wrapU: 0
-    wrapV: 0
-    wrapW: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 1
+  spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -113,13 +113,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: "\u30B9\u30AF\u30EA\u30FC\u30F3\u30B7\u30E7\u30C3\u30C8 2026-01-20 152244_0"
+      name: Screen_Gameover_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 550
-        height: 333
+        width: 1920
+        height: 1080
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -128,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 5c5b9c1eeba4c5db0800000000000000
-      internalID: -4801880918991456827
+      spriteID: 68ab74d715fdc7940800000000000000
+      internalID: 5295352802968058502
       vertices: []
       indices: 
       edges: []
@@ -138,7 +138,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 5e97eb03825dee720800000000000000
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
@@ -148,7 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      "\u30B9\u30AF\u30EA\u30FC\u30F3\u30B7\u30E7\u30C3\u30C8 2026-01-20 152244_0": -4801880918991456827
+      Screen_Gameover_0: 5295352802968058502
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
