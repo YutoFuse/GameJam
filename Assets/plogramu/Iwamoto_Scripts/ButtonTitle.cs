@@ -11,6 +11,16 @@ public class ButtonTitle : MonoBehaviour
     
     public void Osu()
     {
-        SceneManager.LoadScene("TutorialScene");
+        SceneManager.LoadScene("SelectScene");
+    }
+
+    public void GoHomeClickButton()
+    {
+        SceneManager.LoadScene("TitleScene");
+    }
+
+    public void GoNextStageClickButton()
+    {
+        //SceneManager.LoadScene("Game");
     }
 }
