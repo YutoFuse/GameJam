@@ -58,6 +58,7 @@ public class PullArrowIndicator : MonoBehaviour
     public Collider2D LastPointedCollider { get; private set; }
     public GameObject LastPointedObject => LastPointedCollider != null ? LastPointedCollider.gameObject : null;
 
+    public int sprite_number;
     void Awake()
     {
         cam = Camera.main;
@@ -98,6 +99,7 @@ public class PullArrowIndicator : MonoBehaviour
                 dragging = true;
                 Show(true);
                 UpdateArrow(mouseWorld);
+                Debug.Log(sprite_number);
             }
         }
 
@@ -251,7 +253,6 @@ public class PullArrowIndicator : MonoBehaviour
         var targetSR = target.GetComponent<SpriteRenderer>();
         if (targetSR == null) targetSR = target.GetComponentInChildren<SpriteRenderer>();
         if (targetSR != null) targetSR.color = targetHitColor;
-
         // オーナー（セル）を消す
         GameObject ownerGO = (ownerRoot != null) ? ownerRoot.gameObject
                            : (owner != null) ? owner.gameObject
@@ -259,7 +260,8 @@ public class PullArrowIndicator : MonoBehaviour
 
         if (destroyOwner)
         {
-            Destroy(ownerGO);
+            Debug.Log(ownerRoot.gameObject);
+            ownerGO.SetActive(false);
             return;
         }
 

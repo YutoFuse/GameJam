@@ -4,6 +4,7 @@ using UnityEngine.UI;
 
 public class field_create : MonoBehaviour
 {
+    int erasize =3;
     public Sprite[] sprites;
     int[,] eria = new int[3, 3];
     GameObject[,] faces = new GameObject[3, 3];
@@ -36,25 +37,16 @@ public class field_create : MonoBehaviour
                 Debug.Log("OK");
 
                 eria[i, j] = 1;
-                eriaCount++;
+                
 
                 faces[i, j] = obj;
                 face img = faces[i, j].GetComponentInChildren<face>();
+                PullArrowIndicator arrow = faces[i, j].GetComponentInChildren<PullArrowIndicator>();
 
-                if (img == null)
-                {
-                    Debug.LogError("face ‚ªæ“¾‚Å‚«‚Ä‚¢‚Ü‚¹‚ñ");
-                    continue;
-                }
+                if (eriaCount % 2 == 0) { img.tekusutya.sprite = sprites[0]; arrow.sprite_number = 0; }
+                else { img.tekusutya.sprite = sprites[1]; arrow.sprite_number = 1; }
 
-                if (img.tekusutya == null)
-                {
-                    Debug.LogError("tekusutya ‚ª Inspector ‚Åİ’è‚³‚ê‚Ä‚¢‚Ü‚¹‚ñ");
-                    continue;
-                }
-                
-                img.tekusutya.sprite= sprites[eriaCount];
-
+                eriaCount++;
             }
         }
 
@@ -68,5 +60,7 @@ public class field_create : MonoBehaviour
         {
             faces[i, j].SetActive(false);
         }
+        face img = faces[i, j].GetComponentInChildren<face>();
+        img.tekusutya.sprite = sprites[eriaCount];
     }
 }
