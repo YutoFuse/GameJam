@@ -1,5 +1,4 @@
 using UnityEngine;
-
 #if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
 #endif
@@ -7,125 +6,160 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(Collider2D))]
 public class DragSpriteWithMouse : MonoBehaviour
 {
-    [SerializeField] private Camera cam;
-    [SerializeField] private bool onlyDragWhenHit = true;
-    [SerializeField] private SpriteRenderer spriteRenderer; // 未設定なら自動取得
-    [SerializeField] private float paddingPixels = 0f;      // 余白（px）。少し内側にしたい時
+    [Header("Refs")]
+    public Camera cam;
+    public bool onlyDragWhenHit = true;
+    public SpriteRenderer spriteRenderer;
+    public float paddingPixels = 0f;
 
+    [Header("Snap")]
+    [SerializeField] private MaskSnapper snapper; // 未設定なら自動取得
+
+    [Header("Render (Bring to front while dragging)")]
+    [SerializeField] private int dragSortingOrder = 100;   // ドラッグ中は前に
+    private int originalSortingOrder;
+    private int originalSortingLayerID;
 
     private Collider2D col;
     private bool dragging;
     private Vector3 grabOffset;
 
-    private void Awake()
+    void Awake()
     {
         if (cam == null) cam = Camera.main;
         col = GetComponent<Collider2D>();
 
-        if (cam == null)
-            Debug.LogError("[DragSpriteWithMouse] Camera.main が見つかりません。MainCameraタグを確認。", this);
+        if (spriteRenderer == null)
+            spriteRenderer = GetComponentInChildren<SpriteRenderer>();
 
-        if (spriteRenderer == null) spriteRenderer = GetComponent<SpriteRenderer>();
+        if (snapper == null)
+            snapper = GetComponent<MaskSnapper>(); // 同じGOに付いてる想定
 
+        if (spriteRenderer != null)
+        {
+            originalSortingOrder = spriteRenderer.sortingOrder;
+            originalSortingLayerID = spriteRenderer.sortingLayerID;
+        }
     }
 
-    private void Update()
+    void Update()
     {
-        if (cam == null) return;
+        var pressed = GetMousePressedThisFrame();
+        var held = GetMouseHeld();
+        var released = GetMouseReleasedThisFrame();
 
-        // --- 入力取得（新旧どちらでも） ---
-        bool down, hold, up;
-        Vector2 screenPos;
-
-#if ENABLE_INPUT_SYSTEM
-        if (Mouse.current == null)
+        if (!dragging && pressed)
         {
-            // Input System が無効 or 初期化されてない
-            return;
-        }
-        down = Mouse.current.leftButton.wasPressedThisFrame;
-        hold = Mouse.current.leftButton.isPressed;
-        up   = Mouse.current.leftButton.wasReleasedThisFrame;
-        screenPos = Mouse.current.position.ReadValue();
-#else
-        down = Input.GetMouseButtonDown(0);
-        hold = Input.GetMouseButton(0);
-        up   = Input.GetMouseButtonUp(0);
-        screenPos = Input.mousePosition;
-#endif
-
-        if (!dragging && down)
-        {
-            Vector3 mw = ScreenToWorldOnMyZ(screenPos);
-
-            if (!onlyDragWhenHit || (col != null && col.OverlapPoint(mw)))
+            Vector3 mw = GetMouseWorld();
+            if (!onlyDragWhenHit || HitTest(mw))
             {
                 dragging = true;
                 grabOffset = transform.position - mw;
+
+                // ドラッグ中は前に出す（裏に回る対策）
+                BringToFrontWhileDragging();
             }
         }
 
-        if (dragging && hold)
+        if (dragging && held)
         {
-            Vector3 mw = ScreenToWorldOnMyZ(screenPos);
-            var targetPos = mw + grabOffset;
-            transform.position = ClampToScreen(targetPos);  
-      }
+            Vector3 mw = GetMouseWorld();
+            transform.position = mw + grabOffset;
+        }
 
-        if (dragging && up)
+        if (dragging && released)
         {
             dragging = false;
+
+            // 元の描画順へ戻す（吸着したらMaskSnapper側で上書きしてもOK）
+            RestoreSorting();
+
+            // ★ ここが重要：離した瞬間にスナップを呼ぶ
+            Debug.Log("[DragSpriteWithMouse] Released -> TrySnap", this);
+            if (snapper != null) snapper.TrySnap();
+            else Debug.LogWarning("[DragSpriteWithMouse] snapper is NULL", this);
         }
     }
 
-    private Vector3 ClampToScreen(Vector3 worldPos)
+    private bool HitTest(Vector3 mouseWorld)
     {
-        if (spriteRenderer == null) return worldPos;
+        if (col == null) return false;
 
-        // スプライトの半サイズ（ワールド単位）
-        Vector3 ext = spriteRenderer.bounds.extents;
+        // Collider2DのOverlapPointで判定（最も確実）
+        if (col.OverlapPoint(mouseWorld)) return true;
 
-        // 画面の端（ワールド座標）を取得
-        // zはカメラからオブジェクト平面までの距離が必要
-        float dist = Mathf.Abs(cam.transform.position.z - transform.position.z);
-        if (dist < 0.01f) dist = Mathf.Abs(cam.nearClipPlane + 1f);
-
-        // paddingPixels をワールドに変換（縦方向基準）
-        float padWorldY = 0f;
-        float padWorldX = 0f;
-        if (paddingPixels > 0f)
+        // paddingPixels が欲しい場合：SpriteRenderer.boundsで少し広げて判定
+        if (spriteRenderer != null && paddingPixels > 0f && cam != null)
         {
-            // 1pxがワールドでどれくらいか（その距離の平面で）
-            Vector3 a = cam.ScreenToWorldPoint(new Vector3(0, 0, dist));
-            Vector3 b = cam.ScreenToWorldPoint(new Vector3(1, 1, dist));
-            Vector3 perPx = b - a;
-            padWorldX = perPx.x * paddingPixels;
-            padWorldY = perPx.y * paddingPixels;
+            float worldPerPixel = cam.orthographic
+                ? (cam.orthographicSize * 2f) / Screen.height
+                : 0f;
+
+            float padWorld = paddingPixels * worldPerPixel;
+            var b = spriteRenderer.bounds;
+            b.Expand(new Vector3(padWorld, padWorld, 0f));
+            return b.Contains(mouseWorld);
         }
 
-        Vector3 bottomLeft = cam.ScreenToWorldPoint(new Vector3(0, 0, dist));
-        Vector3 topRight   = cam.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, dist));
-
-        float minX = bottomLeft.x + ext.x + padWorldX;
-        float maxX = topRight.x   - ext.x - padWorldX;
-        float minY = bottomLeft.y + ext.y + padWorldY;
-        float maxY = topRight.y   - ext.y - padWorldY;
-
-        worldPos.x = Mathf.Clamp(worldPos.x, minX, maxX);
-        worldPos.y = Mathf.Clamp(worldPos.y, minY, maxY);
-        worldPos.z = transform.position.z;
-        return worldPos;
+        return false;
     }
 
-    private Vector3 ScreenToWorldOnMyZ(Vector2 screen)
+    private void BringToFrontWhileDragging()
     {
-        // dist=0になるのを避ける：最低でもnearClipより大きく
-        float dist = Mathf.Abs(cam.transform.position.z - transform.position.z);
-        if (dist < 0.01f) dist = Mathf.Abs(cam.nearClipPlane + 1f);
+        if (spriteRenderer == null) return;
+        spriteRenderer.sortingOrder = dragSortingOrder;
+    }
 
-        Vector3 p = new Vector3(screen.x, screen.y, dist);
-        Vector3 w = cam.ScreenToWorldPoint(p);
-        w.z = transform.position.z;
-        return w;
+    private void RestoreSorting()
+    {
+        if (spriteRenderer == null) return;
+        spriteRenderer.sortingLayerID = originalSortingLayerID;
+        spriteRenderer.sortingOrder = originalSortingOrder;
+    }
+
+    private Vector3 GetMouseWorld()
+    {
+#if ENABLE_INPUT_SYSTEM
+        if (Mouse.current != null)
+        {
+            Vector2 screen = Mouse.current.position.ReadValue();
+            var p = new Vector3(screen.x, screen.y, Mathf.Abs(cam.transform.position.z));
+            var w = cam.ScreenToWorldPoint(p);
+            w.z = transform.position.z;
+            return w;
+        }
+#endif
+        // 旧Input fallback
+        var p2 = new Vector3(Input.mousePosition.x, Input.mousePosition.y, Mathf.Abs(cam.transform.position.z));
+        var w2 = cam.ScreenToWorldPoint(p2);
+        w2.z = transform.position.z;
+        return w2;
+    }
+
+    private bool GetMousePressedThisFrame()
+    {
+#if ENABLE_INPUT_SYSTEM
+        return Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame;
+#else
+        return Input.GetMouseButtonDown(0);
+#endif
+    }
+
+    private bool GetMouseHeld()
+    {
+#if ENABLE_INPUT_SYSTEM
+        return Mouse.current != null && Mouse.current.leftButton.isPressed;
+#else
+        return Input.GetMouseButton(0);
+#endif
+    }
+
+    private bool GetMouseReleasedThisFrame()
+    {
+#if ENABLE_INPUT_SYSTEM
+        return Mouse.current != null && Mouse.current.leftButton.wasReleasedThisFrame;
+#else
+        return Input.GetMouseButtonUp(0);
+#endif
     }
 }

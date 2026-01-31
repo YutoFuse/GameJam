@@ -270,28 +270,39 @@ public class PullArrowIndicator : MonoBehaviour
         Transform targetRoot = target.transform;
 
         face fromFace = ownerRoot.GetComponentInChildren<face>(true);
-        face toFace = targetRoot.GetComponentInChildren<face>(true);
+        face toFace   = targetRoot.GetComponentInChildren<face>(true);
 
         if (fromFace == null || toFace == null) return;
         if (fromFace.tekusutya == null || toFace.tekusutya == null) return;
 
-        // ★ 完全一致のみ実行
-        if (fromFace.eye == toFace.eye &&
-            fromFace.kuti == toFace.kuti)
+        // ★ マスク考慮の一致判定
+        bool eyeOK   = (fromFace.eye  == toFace.eye)  || fromFace.maskEye   || toFace.maskEye;
+        bool mouthOK = (fromFace.kuti == toFace.kuti) || fromFace.maskMouth || toFace.maskMouth;
+
+        if (!eyeOK || !mouthOK) return;
+
+        // 成功：見た目移動（指したほうが残る）
+        toFace.tekusutya.sprite = fromFace.tekusutya.sprite;
+        toFace.tekusutya.enabled = (toFace.tekusutya.sprite != null);
+
+        // 数値も移動
+        toFace.eye  = fromFace.eye;
+        toFace.kuti = fromFace.kuti;
+
+        // ★ 成功したらマスクは外れる（仕様）
+        toFace.ClearMasks(true); // 見た目も消す
+        fromFace.ClearMasks(true);
+
+        // 元を消す（持ったほうが消える）
+        if (deactivateOwnerRoot && ownerRoot != null)
         {
-            // 見た目移動
-            toFace.tekusutya.sprite = fromFace.tekusutya.sprite;
-
-            // 数値も移動
-            toFace.eye = fromFace.eye;
-            toFace.kuti = fromFace.kuti;
-
-            // 元を消す
-            fromFace.tekusutya.sprite = null;
-            fromFace.tekusutya.enabled = false;
+            ownerRoot.gameObject.SetActive(false);
+            return;
         }
-    }
 
+        fromFace.tekusutya.sprite = null;
+        fromFace.tekusutya.enabled = false;
+    }
 
     private Vector3 GetMouseWorld()
     {

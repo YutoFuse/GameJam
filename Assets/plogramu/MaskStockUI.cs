@@ -53,6 +53,11 @@ public class MaskStockUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
 
     public void OnEndDrag(PointerEventData eventData)
     {
+        Debug.Log($"[MaskStockUI] OnEndDrag called dragging={dragging} currentMask={(currentMask ? currentMask.name : "NULL")}");
+
+        var snap = currentMask.GetComponent<MaskSnapper>();
+        if (snap != null) snap.TrySnap();
+
         if (!dragging) return;
 
         dragging = false;
