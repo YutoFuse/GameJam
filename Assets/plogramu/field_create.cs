@@ -2,6 +2,152 @@
 
 /// <summary>
 /// マス（盤面）を生成し、各マスに顔スプライトを割り当てるクラス
+/// ・Inspectorで設定するもの
+///   - sprites
+///   - background
+///   - parent
+/// ・マス数や配置、spriteIndex はコード内で管理
+/// ・配置順：左下 → 右 → 上
+/// </summary>
+public class field_create : MonoBehaviour
+{
+    // ================================
+    // Inspectorから設定するもの
+    // ================================
+    [Header("Sprites (0～16)")]
+    public Sprite[] sprites;          // 顔スプライト（17種類）
+
+    [Header("Prefab")]
+    public GameObject background;     // マスPrefab
+
+    [Header("Parent")]
+    public Transform parent;          // 親オブジェクト
+
+    // ================================
+    // グリッド設定（コード内）
+    // ================================
+    const int width = 3;
+    const int height = 3;
+    const float cellSize = 1f;
+
+    // ================================
+    // 各マスに表示する spriteIndex
+    // 配置順：左下 → 右 → 上
+    // ================================
+    int[] spriteIndices =
+    {
+        0, 0, 1,
+        1, 1, 1,
+        0, 0, 0
+    };
+
+    // ================================
+    // 初期化処理
+    // ================================
+    void Start()
+    {
+        // ----------------
+        // 事前チェック
+        // ----------------
+        if (sprites == null || sprites.Length < 17)
+        {
+            Debug.LogError("sprites に 17 枚以上の Sprite を設定してください");
+            return;
+        }
+
+        if (background == null)
+        {
+            Debug.LogError("background が設定されていません");
+            return;
+        }
+
+        if (parent == null)
+        {
+            Debug.LogError("parent が設定されていません");
+            return;
+        }
+
+        // ----------------
+        // マス数チェック
+        // ----------------
+        int total = width * height;
+
+        if (spriteIndices.Length != total)
+        {
+            Debug.LogError(
+                $"spriteIndices({spriteIndices.Length}) と マス数({total})が一致しません"
+            );
+            return;
+        }
+
+        // ----------------
+        // 左下基準の原点
+        // ----------------
+        Vector2 origin;
+        origin.x = -(width - 1) * cellSize / 2f;
+        origin.y = -(height - 1) * cellSize / 2f;
+
+        int index = 0;
+
+        // ================================
+        // マス生成
+        // ================================
+        for (int y = 0; y < height; y++)
+        {
+            for (int x = 0; x < width; x++)
+            {
+                // マス位置計算
+                Vector2 pos = origin;
+                pos.x += x * cellSize;
+                pos.y += y * cellSize;
+
+                // マス生成
+                GameObject obj = Instantiate(background, parent);
+                obj.transform.localPosition = pos;
+
+                // face コンポーネント取得
+                face img = obj.GetComponentInChildren<face>();
+
+                // spriteIndex 取得
+                int spriteIndex = spriteIndices[index];
+
+                // 範囲チェック
+                if (spriteIndex < 0 || spriteIndex >= sprites.Length)
+                {
+                    Debug.LogError($"無効な spriteIndex: {spriteIndex}");
+                    index++;
+                    continue;
+                }
+
+                // スプライト設定
+                img.tekusutya.sprite = sprites[spriteIndex];
+
+                // eye / kuti 自動計算
+                CalcEyeKuti(spriteIndex, out img.eye, out img.kuti);
+
+                index++;
+            }
+        }
+
+        Debug.Log($"生成完了：{total}マス");
+    }
+
+    // ================================
+    // spriteIndex → eye / kuti 変換
+    // ================================
+    void CalcEyeKuti(int spriteIndex, out int eye, out int kuti)
+    {
+        const int kutiCount = 4;
+        eye = spriteIndex / kutiCount;
+        kuti = spriteIndex % kutiCount;
+    }
+}
+
+
+/*using UnityEngine;
+
+/// <summary>
+/// マス（盤面）を生成し、各マスに顔スプライトを割り当てるクラス
 /// ・マス数は width × height
 /// ・配置順は 左下 → 右 → 上
 /// ・表示する顔は spriteIndices で自由に指定
@@ -19,8 +165,8 @@ public class field_create : MonoBehaviour
     // グリッド設定（将来変更可能）
     // ================================
     [Header("Grid Size")]
-    public int width = 4;        // 横マス数
-    public int height = 4;       // 縦マス数
+    public int width = 3;        // 横マス数
+    public int height = 3;       // 縦マス数
     public float cellSize = 1f;  // マス間隔
 
     // ================================
@@ -143,4 +289,4 @@ public class field_create : MonoBehaviour
         // kuti は列番号
         kuti = spriteIndex % kutiCount;
     }
-}
+}*/
