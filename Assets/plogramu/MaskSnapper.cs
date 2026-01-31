@@ -14,8 +14,9 @@ public class MaskSnapper : MonoBehaviour
         Debug.Log("[MaskSnapper] TrySnap called", this);
 
         // ★追加：Overlapの件数を見る
-        var hits = Physics2D.OverlapCircleAll(transform.position, searchRadius, slotLayer);
-        Debug.Log($"[MaskSnapper] hits={hits.Length} pos={transform.position} r={searchRadius} layer={slotLayer.value}", this);
+        int layerMask = slotLayer.value == 0 ? Physics2D.AllLayers : slotLayer.value;
+        var hits = Physics2D.OverlapCircleAll(transform.position, searchRadius, layerMask);
+        Debug.Log($"[MaskSnapper] hits={hits.Length} pos={transform.position} r={searchRadius} layer={layerMask}", this);
 
         if (snapped) return;
         if (hits == null || hits.Length == 0) return;
@@ -62,8 +63,9 @@ public class MaskSnapper : MonoBehaviour
         }
 
         // ★ピタッ：まず位置を合わせる（AttachMaskが未完成でも視覚的に分かる）
-        transform.position = best.transform.position;
-
+        var snapPoint = best.snapPoint != null ? best.snapPoint : best.transform;
+        transform.position = snapPoint.position;
+        
         snapped = true;
         snappedFace = best.ownerFace;
         snappedType = best.type;

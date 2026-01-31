@@ -30,6 +30,14 @@ public class MaskSlotTrigger : MonoBehaviour
         if (snapPoint == null)
             snapPoint = transform;
 
+        if (ownerFace != null)
+        {
+            if (type == SlotType.Eye && ownerFace.eyeSlot == null)
+                ownerFace.eyeSlot = snapPoint;
+            else if (type == SlotType.Mouth && ownerFace.mouthSlot == null)
+                ownerFace.mouthSlot = snapPoint;
+        }   
+
         if (ownerFace == null)
             Debug.LogWarning($"[MaskSlotTrigger] ownerFace が親から見つかりません: {name}", this);
     }
