@@ -65,8 +65,6 @@ public class PullArrowIndicator : MonoBehaviour
 
     public int eye=999;
     public int kuti = 999;
-    int target_number_eye=999;
-    int target_number_kuti = 999;
     void Awake()
     {
         cam = Camera.main;
@@ -110,6 +108,7 @@ public class PullArrowIndicator : MonoBehaviour
             Vector3 mouseWorld = GetMouseWorld();
             if (ownerCollider != null && ownerCollider.OverlapPoint(mouseWorld))
             {
+                Debug.Log("OK");
                 dragging = true;
                 Show(true);
                 UpdateArrow(mouseWorld);

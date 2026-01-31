@@ -1,76 +1,79 @@
-using Unity.VisualScripting;
-using UnityEngine;
-using UnityEngine.UI;
+ï»¿using UnityEngine;
 
 public class field_create : MonoBehaviour
 {
-    int fast = 0;
-    int erasize = 3;
+    [Header("Sprites")]
     public Sprite[] sprites;
-    int[] eria;
-    int[,] eria_eye = new int[3, 3];
-    int[,] eria_kuti = new int[3, 3];
-    GameObject[,] faces = new GameObject[3, 3];
-
-    int eriaCount = 0;
-    const int eriaWidth = 3;
-    const int eriaHeight = 3;
-    float cellsize = 1f;
 
     public GameObject background;
     public Transform parent;
 
-    void Start()
-    {
-        Vector2 defaultpos = Vector2.zero;
-        defaultpos.x = -(eriaWidth - 1) * cellsize / 2f;
-        defaultpos.y = -(eriaHeight - 1) * cellsize / 2f;
+    const int width = 3;
+    const int height = 3;
+    const float cellSize = 1f;
 
-        for (int i = 0; i < 3; i++)
+    [HideInInspector]
+    public int[] spriteIndices;
+
+    // -------------------------
+    // å¤–éƒ¨ã‹ã‚‰å‘¼ã°ã‚Œã‚‹ç”Ÿæˆé–¢æ•°
+    // -------------------------
+
+
+    public void CreateField()
+    {
+        // æ—¢å­˜ãƒžã‚¹å‰Šé™¤
+        foreach (Transform child in parent)
         {
-            for (int j = 0; j < 3; j++)
+            Destroy(child.gameObject);
+        }
+
+        int total = width * height;
+        if (spriteIndices == null || spriteIndices.Length != total)
+        {
+            Debug.LogError("spriteIndices ãŒä¸æ­£ã§ã™");
+            return;
+        }
+
+        Vector2 origin;
+        origin.x = -(width - 1) * cellSize / 2f;
+        origin.y = -(height - 1) * cellSize / 2f;
+
+        int index = 0;
+
+        for (int y = 0; y < height; y++)
+        {
+            for (int x = 0; x < width; x++)
             {
-                Vector2 pos = defaultpos;
-                pos.x += i * cellsize;
-                pos.y += j * cellsize;
+                Vector2 pos = origin + new Vector2(x * cellSize, y * cellSize);
 
                 GameObject obj = Instantiate(background, parent);
                 obj.transform.localPosition = pos;
 
+                face img = obj.GetComponentInChildren<face>();
 
-                faces[i, j] = obj;
-                face img = faces[i, j].GetComponentInChildren<face>();
+                int spriteIndex = spriteIndices[index];
 
-                if (eriaCount % 2 == 0) { img.tekusutya.sprite = sprites[0]; img.eye = 0; img.kuti = 0; }
-                else { img.tekusutya.sprite = sprites[1]; img.eye = 1; img.kuti = 1; }
+                img.tekusutya.sprite = sprites[spriteIndex];
+                CalcEyeKuti(spriteIndex, out img.eye, out img.kuti);
 
-                eriaCount++;
+                index++;
             }
         }
+    }
 
-        Debug.Log("ƒ}ƒX–Ú " + eriaCount);
+    void CalcEyeKuti(int spriteIndex, out int eye, out int kuti)
+    {
+        if (spriteIndex == 16)
+        {
+            eye = 999;
+            kuti = 999;
+        }
+        else
+        {
+            const int kutiCount = 4;
+            eye = spriteIndex / kutiCount;
+            kuti = spriteIndex % kutiCount;
+        }
     }
 }
-
-    /*public void number()
-    {
-            {
-                for (int i = 0; i < 3; i++)
-                {
-                    for (int j = 0; j < 3; j++)
-                    {
-                        GameObject obj = faces[0, 0];
-                        PullArrowIndicator arrow = faces[i, j].GetComponentInChildren<PullArrowIndicator>();
-                    if (arrow == null)
-                    {
-                        Debug.LogError($"PullArrowIndicator ‚ªŒ©‚Â‚©‚è‚Ü‚¹‚ñ [{i},{j}]", faces[i, j]);
-                        continue;
-                    }
-                    arrow.sprite_number_eye = eria_eye[i, j];
-                        arrow.sprite_number_kuti = eria_kuti[i, j];
-                        Debug.Log("OK" + eria_eye[i, j] + eria_kuti[i, j]);
-                    }
-                }
-            }
-        }
-}*/
