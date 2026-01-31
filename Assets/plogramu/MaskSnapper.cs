@@ -9,7 +9,7 @@ public class MaskSnapper : MonoBehaviour
     public face snappedFace;
     public SlotType snappedType;
 
-     public void TrySnap()
+    public bool TrySnap()
     {
         Debug.Log("[MaskSnapper] TrySnap called", this);
 
@@ -18,8 +18,8 @@ public class MaskSnapper : MonoBehaviour
         var hits = Physics2D.OverlapCircleAll(transform.position, searchRadius, layerMask);
         Debug.Log($"[MaskSnapper] hits={hits.Length} pos={transform.position} r={searchRadius} layer={layerMask}", this);
 
-        if (snapped) return;
-        if (hits == null || hits.Length == 0) return;
+        if (snapped) return true;
+        if (hits == null || hits.Length == 0) return false;
 
         MaskSlotTrigger best = null;
         float bestDist = float.MaxValue;
@@ -46,8 +46,8 @@ public class MaskSnapper : MonoBehaviour
             if (slot.type == SlotType.Eye && slot.ownerFace.maskEye) continue;
             if (slot.type == SlotType.Mouth && slot.ownerFace.maskMouth) continue;
 
-            float d = Vector2.Distance(transform.position, slot.transform.position);
-            Debug.Log($"[MaskSnapper] candidate {slot.name} dist={d}", slot);
+            var snapPoints = slot.snapPoint != null ? slot.snapPoint : slot.transform;
+            float d = Vector2.Distance(transform.position, snapPoints.position);            Debug.Log($"[MaskSnapper] candidate {slot.name} dist={d}", slot);
 
             if (d < bestDist)
             {
@@ -59,18 +59,32 @@ public class MaskSnapper : MonoBehaviour
         if (best == null)
         {
             Debug.Log("[MaskSnapper] best is NULL (no valid slot)", this);
-            return;
+            return false;
         }
 
         // ★ピタッ：まず位置を合わせる（AttachMaskが未完成でも視覚的に分かる）
         var snapPoint = best.snapPoint != null ? best.snapPoint : best.transform;
         transform.position = snapPoint.position;
-        
+
         snapped = true;
         snappedFace = best.ownerFace;
         snappedType = best.type;
 
         snappedFace.AttachMask(snappedType, gameObject);
+        LockAfterSnap();
+
+        return true;
     }
 
+    private void LockAfterSnap()
+    {
+        var col = GetComponent<Collider2D>();
+        if (col != null) col.enabled = false;
+
+        var dragMouse = GetComponent<DragSpriteWithMouse>();
+        if (dragMouse != null) dragMouse.enabled = false;
+
+        var dragWorld = GetComponent<MaskDragWorld>();
+        if (dragWorld != null) dragWorld.enabled = false;
+    }
 }

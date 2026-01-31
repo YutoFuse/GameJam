@@ -275,8 +275,10 @@ public class PullArrowIndicator : MonoBehaviour
         if (fromFace.tekusutya == null || toFace.tekusutya == null) return;
 
         // ★ マスク考慮の一致判定
-        bool eyeOK   = (fromFace.eye  == toFace.eye)  || fromFace.maskEye   || toFace.maskEye;
-        bool mouthOK = (fromFace.kuti == toFace.kuti) || fromFace.maskMouth || toFace.maskMouth;
+        bool eyeMasked = fromFace.maskEye || toFace.maskEye;
+        bool mouthMasked = fromFace.maskMouth || toFace.maskMouth;
+        bool eyeOK = eyeMasked || (fromFace.eye == toFace.eye);
+        bool mouthOK = mouthMasked || (fromFace.kuti == toFace.kuti);
 
         if (!eyeOK || !mouthOK) return;
 
@@ -288,9 +290,9 @@ public class PullArrowIndicator : MonoBehaviour
         toFace.eye  = fromFace.eye;
         toFace.kuti = fromFace.kuti;
 
-        // ★ 成功したらマスクは外れる（仕様）
-        toFace.ClearMasks(true); // 見た目も消す
-        fromFace.ClearMasks(true);
+        // 成功したらマスクは外せる（対象側に付いているものは外して戻す）
+        if (toFace.maskEye || toFace.maskMouth) toFace.ClearMasks(true);
+        if (fromFace.maskEye || fromFace.maskMouth) fromFace.ClearMasks(true);
 
         // 元を消す（持ったほうが消える）
         if (deactivateOwnerRoot && ownerRoot != null)
