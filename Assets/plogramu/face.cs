@@ -4,6 +4,8 @@ using UnityEngine.UI;
 public class face : MonoBehaviour
 {
     public SpriteRenderer tekusutya;
+    public int eye;
+    public int kuti;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {

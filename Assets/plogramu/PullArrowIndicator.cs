@@ -63,7 +63,10 @@ public class PullArrowIndicator : MonoBehaviour
     public Collider2D LastPointedCollider { get; private set; }
     public GameObject LastPointedObject => LastPointedCollider != null ? LastPointedCollider.gameObject : null;
 
-    public int sprite_number;
+    public int eye=999;
+    public int kuti = 999;
+    int target_number_eye=999;
+    int target_number_kuti = 999;
     void Awake()
     {
         cam = Camera.main;
@@ -90,6 +93,7 @@ public class PullArrowIndicator : MonoBehaviour
         HideArrowHard();
     }
 
+
     void OnDisable()
     {
         // 途中で無効化されても矢印が残らない保険
@@ -109,7 +113,6 @@ public class PullArrowIndicator : MonoBehaviour
                 dragging = true;
                 Show(true);
                 UpdateArrow(mouseWorld);
-                Debug.Log(sprite_number);
             }
         }
 
@@ -263,40 +266,30 @@ public class PullArrowIndicator : MonoBehaviour
         if (dir == DragDirection.None) return;
         if (target == null) return;
 
-        // 移動元（ownerRoot配下）の face を取得
-        var ownerGO = (ownerRoot != null) ? ownerRoot.gameObject
-                : (owner != null) ? owner.gameObject
-                : gameObject;
+        Transform ownerRoot = this.ownerRoot != null ? this.ownerRoot : transform.root;
+        Transform targetRoot = target.transform;
 
-        face fromFace = ownerGO.GetComponentInChildren<face>(true);
-        if (fromFace == null || fromFace.tekusutya == null)
+        face fromFace = ownerRoot.GetComponentInChildren<face>(true);
+        face toFace = targetRoot.GetComponentInChildren<face>(true);
+
+        if (fromFace == null || toFace == null) return;
+        if (fromFace.tekusutya == null || toFace.tekusutya == null) return;
+
+        // ★ 完全一致のみ実行
+        if (fromFace.eye == toFace.eye &&
+            fromFace.kuti == toFace.kuti)
         {
-            Debug.LogWarning("[PullArrowIndicator] 移動元の face / tekusutya が見つかりません", ownerGO);
-            return;
+            // 見た目移動
+            toFace.tekusutya.sprite = fromFace.tekusutya.sprite;
+
+            // 数値も移動
+            toFace.eye = fromFace.eye;
+            toFace.kuti = fromFace.kuti;
+
+            // 元を消す
+            fromFace.tekusutya.sprite = null;
+            fromFace.tekusutya.enabled = false;
         }
-
-        // 移動先（targetの親側にあるはず）の face を取得
-        face toFace = target.GetComponentInParent<face>();
-        if (toFace == null || toFace.tekusutya == null)
-        {
-            Debug.LogWarning("[PullArrowIndicator] 移動先の face / tekusutya が見つかりません", target.gameObject);
-            return;
-        }
-
-        // ★ 見た目を移し替える
-        Sprite moved = fromFace.tekusutya.sprite;
-        // toFace.tekusutya.sprite = moved;
-        moved = toFace.tekusutya.sprite;
-
-        // ★ 移動元を空にする（好みで）
-        // 1) 顔だけ消したい（枠やセルは残す）
-        fromFace.tekusutya.sprite = null;
-        fromFace.tekusutya.enabled = false;
-
-        // ownerGO.SetActive(false);
-
-        // Destroyしたいなら（盤面管理と相談）
-        // if (destroyOwner) Destroy(ownerGO);
     }
 
 
