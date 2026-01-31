@@ -65,8 +65,6 @@ public class PullArrowIndicator : MonoBehaviour
 
     public int eye=999;
     public int kuti = 999;
-    int target_number_eye=999;
-    int target_number_kuti = 999;
     void Awake()
     {
         cam = Camera.main;
