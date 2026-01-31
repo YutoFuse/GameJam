@@ -29,7 +29,7 @@ public class field_create : MonoBehaviour
                 pos.x += i * cellsize;
                 pos.y += j * cellsize;
 
-                GameObject obj = Instantiate(background,parent);
+                GameObject obj = Instantiate(background);
                 obj.transform.localPosition = pos;
 
                 Debug.Log("OK");
