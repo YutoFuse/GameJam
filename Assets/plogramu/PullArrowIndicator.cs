@@ -298,15 +298,17 @@ public class PullArrowIndicator : MonoBehaviour
         if (deactivateOwnerRoot && ownerRoot != null)
         {
             ownerRoot.gameObject.SetActive(false);
+
+            field_create create;
+            GameObject field = GameObject.Find("field_Maneger");
+            create = field.GetComponent<field_create>();
+            create.stick();
+
             return;
         }
 
         fromFace.tekusutya.sprite = null;
         fromFace.tekusutya.enabled = false;
-
-        field_create create;
-        GameObject field = GameObject.Find("field_Maneger");
-        create = field.GetComponent<field_create>();
 
     }
 

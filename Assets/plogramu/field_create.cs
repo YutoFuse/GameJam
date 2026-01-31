@@ -1,7 +1,9 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class field_create : MonoBehaviour
 {
+    public int stage;
     [Header("Sprites")]
     public Sprite[] sprites;
 
@@ -61,6 +63,20 @@ public class field_create : MonoBehaviour
                 index++;
             }
         }
+    }
+    public void stick()
+    {
+        total--;
+        Debug.Log(total);
+        if (total == 1)
+        {
+            Invoke(nameof(CLEAR), 1.0f);
+        }
+    }
+    void CLEAR()
+    {
+        SceneManager.LoadScene("GameClearScene");
+
     }
 
     void CalcEyeKuti(int spriteIndex, out int eye, out int kuti)
