@@ -137,9 +137,17 @@ public class field_create : MonoBehaviour
     // ================================
     void CalcEyeKuti(int spriteIndex, out int eye, out int kuti)
     {
-        const int kutiCount = 4;
-        eye = spriteIndex / kutiCount;
-        kuti = spriteIndex % kutiCount;
+        if (spriteIndex == 16) //空白の時
+        {
+            eye = 999;
+            kuti = 999;
+        }
+        else
+        {
+            const int kutiCount = 4;
+            eye = spriteIndex / kutiCount;
+            kuti = spriteIndex % kutiCount;
+        }
     }
 }
 

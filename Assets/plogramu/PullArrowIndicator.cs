@@ -108,6 +108,7 @@ public class PullArrowIndicator : MonoBehaviour
             Vector3 mouseWorld = GetMouseWorld();
             if (ownerCollider != null && ownerCollider.OverlapPoint(mouseWorld))
             {
+                Debug.Log("OK");
                 dragging = true;
                 Show(true);
                 UpdateArrow(mouseWorld);
