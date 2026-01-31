@@ -136,18 +136,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 67f8e2759be82e94d96684b462b741da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PullArrowIndicator
+  numberx: 
+  numbery: 
+  owner: {fileID: 0}
+  ownerCollider: {fileID: 0}
   arrowSprite: {fileID: 1437609013499417839}
   arrowRenderer: {fileID: 0}
-  maxLength: 1.5
+  maxLength: 1.2
   minLength: 0
   baseThickness: 1
   angleOffsetDeg: 180
   invertDirection: 0
   pivotTipLocalX: 0.5
-  targetLayer:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  overlapRadius: 0
+  deadZone: 0.15
+  axisConeDeg: 30
   OnReleased:
     m_PersistentCalls:
       m_Calls: []
