@@ -1,54 +1,57 @@
 using UnityEngine;
-using UnityEngine.TextCore.Text;
+using UnityEngine.UI;
 
 public class field_create : MonoBehaviour
 {
-    int[,] eria = new int[3,3];
-    GameObject[,] face=new GameObject[3,3];
-    int eriaCount=0;
+    public Sprite[] sprites;
+    int[,] eria = new int[3, 3];
+    GameObject[,] faces = new GameObject[3, 3];
+
+    int eriaCount = 0;
     const int eriaWidth = 3;
     const int eriaHeight = 3;
-    float cellsize=1f;
+    float cellsize = 1f;
+
     public GameObject background;
     public Transform parent;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-
-        Vector2 defaultpos = new Vector2(0.0f, 0.0f);
-        defaultpos.x=-(eriaWidth-1)*cellsize/2f;
-        defaultpos.y=-(eriaHeight - 1) * cellsize / 2f;
+        Vector2 defaultpos = Vector2.zero;
+        defaultpos.x = -(eriaWidth - 1) * cellsize / 2f;
+        defaultpos.y = -(eriaHeight - 1) * cellsize / 2f;
 
         for (int i = 0; i < 3; i++)
         {
-            for(int j = 0; j < 3; j++)
+            for (int j = 0; j < 3; j++)
             {
-
                 Vector2 pos = defaultpos;
-                pos.x += i;
-                pos.y += j;
-                GameObject obj;
-                obj = Instantiate(background);
-                obj.transform.localPosition = pos;
-                eria[i,j] = 1;
-                eriaCount++;
+                pos.x += i * cellsize;
+                pos.y += j * cellsize;
 
-                face[i, j] = obj;
-                
+                GameObject obj = Instantiate(background,parent);
+                obj.transform.localPosition = pos;
+
+                Debug.Log("OK");
+                face view = obj.GetComponentInChildren<face>();
+
+                //view.image.sprite = sprites[2];
+
+                eria[i, j] = 1;
+                eriaCount++;
+                faces[i, j] = obj;
             }
         }
-        Debug.Log("マス目"+eriaCount);
+
+        Debug.Log("マス目 " + eriaCount);
     }
 
-    // Update is called once per frame
     void Update()
     {
-        int i = 1,j = 1;
+        int i = 1, j = 1;
         if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
-            Debug.Log("OK");
-            face[i,j].SetActive(false);
+            faces[i, j].SetActive(false);
         }
     }
 }
