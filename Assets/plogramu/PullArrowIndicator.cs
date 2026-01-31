@@ -32,7 +32,7 @@ public class PullArrowIndicator : MonoBehaviour
     [SerializeField] private float pivotTipLocalX = 0.5f;
 
     [Header("Direction Decide")]
-    [SerializeField] private float deadZone = 0.15f;
+    [SerializeField] private float deadZone = 0.3f;
     [SerializeField] private float axisConeDeg = 30f;
 
     [Header("Target Detect (Neighbor only)")]
@@ -128,7 +128,27 @@ public class PullArrowIndicator : MonoBehaviour
             DragDirection dir = DecideDirection(releaseWorld);
 
             center = (owner != null) ? owner.position : transform.position;
-            LastPointedCollider = DetectNeighbor(dir);
+            float dragDist = (releaseWorld - center).magnitude;
+            if (dragDist < deadZone)
+            {
+                // deadZone未満なら何も起こさない
+                dragging = false;
+                HideArrowHard();
+                OnReleased?.Invoke(this, dir);
+                OnReleasedWithTarget?.Invoke(this, dir, null);
+                return;
+            }
+
+            // 矢印の先端（tipPos）で判定する
+            Collider2D pointed = Physics2D.OverlapPoint(tipPos, targetLayer);
+            if (pointed != null && !IsOwnerCollider(pointed))
+            {
+                LastPointedCollider = pointed;
+            }
+            else
+            {
+                LastPointedCollider = null;
+            }
 
             dragging = false;
             HideArrowHard();
@@ -232,9 +252,13 @@ public class PullArrowIndicator : MonoBehaviour
             var c = hits[i].collider;
             if (c == null) continue;
             if (IsOwnerCollider(c)) continue;
+            // faceコンポーネントでfromFaceと同じものは除外
+            var ownerRoot = this.ownerRoot != null ? this.ownerRoot : transform.root;
+            face fromFace = ownerRoot.GetComponentInChildren<face>(true);
+            face toFace = c.GetComponentInParent<face>(true);
+            if (fromFace != null && toFace != null && fromFace == toFace) continue;
             return c;
         }
-
         return null;
     }
 
@@ -269,9 +293,11 @@ public class PullArrowIndicator : MonoBehaviour
         Transform targetRoot = target.transform;
 
         face fromFace = ownerRoot.GetComponentInChildren<face>(true);
-        face toFace   = targetRoot.GetComponentInChildren<face>(true);
+        face toFace = target.GetComponentInParent<face>(true);
 
+        // 自分自身を参照している場合は何もしない
         if (fromFace == null || toFace == null) return;
+        if (fromFace == toFace) return;
         if (fromFace.tekusutya == null || toFace.tekusutya == null) return;
 
         // ★ マスク考慮の一致判定
@@ -280,11 +306,14 @@ public class PullArrowIndicator : MonoBehaviour
         bool eyeOK = eyeMasked || (fromFace.eye == toFace.eye);
         bool mouthOK = mouthMasked || (fromFace.kuti == toFace.kuti);
 
+        // マスクされていない場合は完全一致のみ許可
+        if (!eyeMasked && fromFace.eye != toFace.eye) return;
+        if (!mouthMasked && fromFace.kuti != toFace.kuti) return;
         if (!eyeOK || !mouthOK) return;
 
-        // 成功：見た目移動（指したほうが残る）
-        toFace.tekusutya.sprite = fromFace.tekusutya.sprite;
-        toFace.tekusutya.enabled = (toFace.tekusutya.sprite != null);
+        // 成功：見た目移動（刺されたほうが残る）
+        fromFace.tekusutya.sprite = toFace.tekusutya.sprite;
+        fromFace.tekusutya.enabled = (fromFace.tekusutya.sprite != null);
 
         // 数値も移動
         toFace.eye  = fromFace.eye;
