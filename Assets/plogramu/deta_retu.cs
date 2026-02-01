@@ -51,6 +51,8 @@ public class deta_retu : MonoBehaviour
         ,
         new int[] //stage7
         {
+
+
            16, 8, 16,
             1, 5, 1,
             16,5, 16
@@ -60,7 +62,7 @@ public class deta_retu : MonoBehaviour
         {
            4, 16, 4,
             12, 16, 14,
-            4, 16, 4
+            4, 5, 4
         }
         
     };
@@ -81,17 +83,17 @@ public class deta_retu : MonoBehaviour
             GameObject.Find("field_Maneger")
             .GetComponent<field_create>();
 
-        // stageIndex ・ｽ`・ｽF・ｽb・ｽN
+        // stageIndex ?ｿｽE?ｿｽ`?ｿｽE?ｿｽF?ｿｽE?ｿｽb?ｿｽE?ｿｽN
         if (stageIndex < 0 || stageIndex >= stages.Length)
         {
-            Debug.LogError("・ｽ・ｽ・ｽﾝゑｿｽ・ｽﾈゑｿｽ・ｽX・ｽe・ｽ[・ｽW・ｽﾅゑｿｽ");
+            Debug.LogError("?ｿｽE?ｿｽ?ｿｽE?ｿｽ?ｿｽE?ｿｽﾝゑｿｽ?ｿｽE?ｿｽﾈゑｿｽ?ｿｽE?ｿｽX?ｿｽE?ｿｽe?ｿｽE?ｿｽ[?ｿｽE?ｿｽW?ｿｽE?ｿｽﾅゑｿｽ");
             return;
         }
 
-        // ・ｽz・ｽ・ｽ・ｽn・ｽ・ｽ
+        // ?ｿｽE?ｿｽz?ｿｽE?ｿｽ?ｿｽE?ｿｽ?ｿｽE?ｿｽn?ｿｽE?ｿｽ?ｿｽE?ｿｽ
         create.spriteIndices = stages[stageIndex];
 
-        // ・ｽﾕ面ゑｿｽ・ｽﾄ撰ｿｽ・ｽ・ｽ
+        // ?ｿｽE?ｿｽﾕ面ゑｿｽ?ｿｽE?ｿｽﾄ撰ｿｽ?ｿｽE?ｿｽ?ｿｽE?ｿｽ
         create.CreateField();
     }
 }
