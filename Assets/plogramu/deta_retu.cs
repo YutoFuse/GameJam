@@ -38,6 +38,11 @@ public class deta_retu : MonoBehaviour
         deta_shuuto(stage_now);//stage
     }
 
+    public void Reset()
+    {
+        deta_shuuto(stage_now);
+    }
+
 
     public void deta_shuuto(int stageIndex)
     {
