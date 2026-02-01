@@ -1,52 +1,52 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 public class AudioManager : MonoBehaviour
 {
-    
+
     public static AudioManager instance;
 
     [Header("--- Audio Source ---")]
-    [SerializeField] AudioSource musicSource; // BGM—p
-    [SerializeField] AudioSource sfxSource;   // Œø‰Ê‰¹—p
+    [SerializeField] AudioSource musicSource; // BGMç”¨
+Â  Â  [SerializeField] AudioSource sfxSource;Â  Â // åŠ¹æœéŸ³ç”¨
 
-    [Header("--- Audio Clip ---")]
-    public AudioClip background; // BGM—p‚Ì‹È‚ğƒZƒbƒg
-    public AudioClip ActionSE;   
-    public AudioClip StartSE;   
-    public AudioClip GoalSE;   
-    public AudioClip GameOverSE;   
+Â  Â  [Header("--- Audio Clip ---")]
+    public AudioClip background; // BGMç”¨ã®æ›²ã‚’ã‚»ãƒƒãƒˆ
+Â  Â  public AudioClip ActionSE;
+    public AudioClip StartSE;
+    public AudioClip GoalSE;
+    //public AudioClip GameOverSE;
 
 
     private void Awake()
     {
-        // ƒV[ƒ“‚ğŒ×‚¢‚Å‚à‚±‚ÌƒIƒuƒWƒFƒNƒg‚ªd•¡‚µ‚È‚¢‚æ‚¤‚É‚·‚éİ’è
-        if (instance == null)
+Â  Â  Â  Â  // ã‚·ãƒ¼ãƒ³ã‚’è·¨ã„ã§ã‚‚ã“ã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆãŒé‡è¤‡ã—ãªã„ã‚ˆã†ã«ã™ã‚‹è¨­å®š
+Â  Â  Â  Â  if (instance == null)
         {
             instance = this;
-            DontDestroyOnLoad(gameObject); // ƒV[ƒ“‚ğˆÚ“®‚µ‚Ä‚à‚±‚ÌƒIƒuƒWƒFƒNƒg‚ğ‰ó‚³‚È‚¢
-        }
+            DontDestroyOnLoad(gameObject); // ã‚·ãƒ¼ãƒ³ã‚’ç§»å‹•ã—ã¦ã‚‚ã“ã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’å£Šã•ãªã„
+Â  Â  Â  Â  }
         else
         {
-            Destroy(gameObject); // ‚·‚Å‚É‘¶İ‚µ‚Ä‚¢‚½‚ç©•ª‚ğÁ‚·
-        }
+            Destroy(gameObject); // ã™ã§ã«å­˜åœ¨ã—ã¦ã„ãŸã‚‰è‡ªåˆ†ã‚’æ¶ˆã™
+Â  Â  Â  Â  }
     }
 
     private void Start()
     {
-        // ƒQ[ƒ€ŠJn‚ÉBGM‚ğÄ¶
-        musicSource.clip = background;
+Â  Â  Â  Â  // ã‚²ãƒ¼ãƒ é–‹å§‹æ™‚ã«BGMã‚’å†ç”Ÿ
+Â  Â  Â  Â  musicSource.clip = background;
         musicSource.Play();
     }
 
-    // D‚«‚È‚ÉBGM‚ğÄ¶E•ÏX‚·‚é‚½‚ß‚Ìƒƒ\ƒbƒh
-    public void PlayMusic(AudioClip clip)
+Â  Â  // å¥½ããªæ™‚ã«BGMã‚’å†ç”Ÿãƒ»å¤‰æ›´ã™ã‚‹ãŸã‚ã®ãƒ¡ã‚½ãƒƒãƒ‰
+Â  Â  public void PlayMusic(AudioClip clip)
     {
         musicSource.clip = clip;
         musicSource.Play();
     }
 
-    // D‚«‚È‚ÉŒø‰Ê‰¹‚ğÄ¶‚·‚é‚½‚ß‚Ìƒƒ\ƒbƒh
-    public void PlaySE(AudioClip clip)
+Â  Â  // å¥½ããªæ™‚ã«åŠ¹æœéŸ³ã‚’å†ç”Ÿã™ã‚‹ãŸã‚ã®ãƒ¡ã‚½ãƒƒãƒ‰
+Â  Â  public void PlaySE(AudioClip clip)
     {
         sfxSource.PlayOneShot(clip);
     }
