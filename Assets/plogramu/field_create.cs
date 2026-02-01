@@ -3,28 +3,42 @@ using UnityEngine.SceneManagement;
 
 public class field_create : MonoBehaviour
 {
-    public int stage;
-
     [Header("Sprites")]
     public Sprite[] sprites;
 
+    [Header("Prefabs")]
+    public GameObject face_image;
     public GameObject background;
-    public Transform parent;
+
+    [Header("Parents")]
+    public Transform parent;   // 顔マス
+    public Transform parent2;  // 背景マス
 
     const int width = 3;
     const int height = 3;
     const float cellSize = 1f;
 
-    public int total;
+    int total;
     [HideInInspector] public int[] spriteIndices;
 
+    // -----------------------------
+    // フィールド生成
+    // -----------------------------
     public void CreateField()
     {
-        // 既存マス削除
-        foreach (Transform child in parent)
+        // MaskStockUI 初期化
+        MaskStockUI musk = null;
+        GameObject stock = GameObject.Find("MaskImage");
+        if (stock != null)
         {
-            Destroy(child.gameObject);
+            musk = stock.GetComponent<MaskStockUI>();
+            musk.stock = 3;
+            musk.RefreshCountUI();
         }
+
+        // 既存マス削除
+        ClearChildren(parent);
+        ClearChildren(parent2);
 
         total = width * height;
 
@@ -34,10 +48,7 @@ public class field_create : MonoBehaviour
             return;
         }
 
-        Vector2 origin;
-        origin.x = -(width - 1) * cellSize / 2f;
-        origin.y = -(height - 1) * cellSize / 2f;
-
+        Vector2 origin = new Vector2(-(width - 1) * cellSize / 2f, -(height - 1) * cellSize / 2f);
         int index = 0;
 
         for (int y = 0; y < height; y++)
@@ -46,43 +57,43 @@ public class field_create : MonoBehaviour
             {
                 Vector2 pos = origin + new Vector2(x * cellSize, y * cellSize);
 
-                GameObject obj = Instantiate(background, parent);
-                obj.transform.localPosition = pos;
+                // マス生成
+                GameObject obj = Instantiate(face_image, parent);
+                GameObject back = Instantiate(background, parent2);
 
-                // ★ true を付ける：非アクティブな子にも対応
+                obj.transform.localPosition = pos;
+                back.transform.localPosition = pos;
+
+                // face コンポーネント取得
                 face img = obj.GetComponentInChildren<face>(true);
                 if (img == null)
                 {
-                    Debug.LogError("[field_create] face が見つかりません。backgroundプレハブ構造を確認してください", obj);
+                    Debug.LogError("face が見つかりません。Prefab構造を確認してください", obj);
                     index++;
                     continue;
                 }
 
                 int spriteIndex = spriteIndices[index];
 
-                // 範囲チェック
-                if (sprites == null || spriteIndex < 0 || spriteIndex >= sprites.Length)
-                {
-                    Debug.LogError($"[field_create] spriteIndexが範囲外: {spriteIndex}", obj);
-                    index++;
-                    continue;
-                }
-
-                // 見た目
+                // スプライト設定
                 img.tekusutya.sprite = sprites[spriteIndex];
-                img.tekusutya.enabled = true; // 念のため
+                img.tekusutya.enabled = true;
+                img.tekusutya.color = (spriteIndex == 16) ? new Color(0f, 0f, 0f, 0.5f) : Color.white;
 
-                // 目口パラメータ
+                // 目口設定
                 CalcEyeKuti(spriteIndex, out img.eye, out img.kuti);
 
-                // ★ ここが肝：index16(黒マス)はマスクスロット無効化
-                if (spriteIndex == 16)
+                // 黒マスはMaskSlot無効化
+                var slots = obj.GetComponentsInChildren<MaskSlotTrigger>(true);
+                foreach (var slot in slots)
                 {
-                    DisableMaskSlots(obj);
-                }
-                else
-                {
-                    EnableMaskSlots(obj); // もし前のステージで無効化されてた場合の保険
+                    var col = slot.GetComponent<Collider2D>();
+                    if (col != null)
+                        col.enabled = (spriteIndex != 16); // 黒マスは Collider 無効
+
+                    slot.gameObject.layer = (spriteIndex == 16) ?
+                        LayerMask.NameToLayer("Default") :
+                        LayerMask.NameToLayer("MaskSlot");
                 }
 
                 index++;
@@ -90,22 +101,21 @@ public class field_create : MonoBehaviour
         }
     }
 
-    public void stick()
+    // -----------------------------
+    // 親の子をすべて破棄
+    // -----------------------------
+    private void ClearChildren(Transform parent)
     {
-        total--;
-        Debug.Log(total);
-        if (total == 1)
+        for (int i = parent.childCount - 1; i >= 0; i--)
         {
-            Invoke(nameof(CLEAR), 1.0f);
+            Destroy(parent.GetChild(i).gameObject);
         }
     }
 
-    void CLEAR()
-    {
-        SceneManager.LoadScene("GameClearScene");
-    }
-
-    void CalcEyeKuti(int spriteIndex, out int eye, out int kuti)
+    // -----------------------------
+    // 目口計算
+    // -----------------------------
+    private void CalcEyeKuti(int spriteIndex, out int eye, out int kuti)
     {
         if (spriteIndex == 16)
         {
@@ -120,35 +130,20 @@ public class field_create : MonoBehaviour
         }
     }
 
-    // -------------------------
-    // ★追加：黒マスはマスク吸着不可にする
-    // -------------------------
-    private void DisableMaskSlots(GameObject cellRoot)
+    // -----------------------------
+    // ステージクリア
+    // -----------------------------
+    public void stick()
     {
-        var slots = cellRoot.GetComponentsInChildren<MaskSlotTrigger>(true);
-        for (int i = 0; i < slots.Length; i++)
+        total--;
+        if (total <= 1)
         {
-            // スロット側のColliderを切る（OverlapCircleに拾われなくなる）
-            var col = slots[i].GetComponent<Collider2D>();
-            if (col != null) col.enabled = false;
-
-            // ついでに Layer を MaskSlot 以外へ（保険）
-            slots[i].gameObject.layer = LayerMask.NameToLayer("Default");
+            Invoke(nameof(CLEAR), 1.0f);
         }
     }
 
-    // （任意）次のステージ生成時に元へ戻す用
-    private void EnableMaskSlots(GameObject cellRoot)
+    private void CLEAR()
     {
-        var slots = cellRoot.GetComponentsInChildren<MaskSlotTrigger>(true);
-        for (int i = 0; i < slots.Length; i++)
-        {
-            var col = slots[i].GetComponent<Collider2D>();
-            if (col != null) col.enabled = true;
-
-            // MaskSlotレイヤーを使ってるなら戻す
-            int maskSlotLayer = LayerMask.NameToLayer("MaskSlot");
-            if (maskSlotLayer >= 0) slots[i].gameObject.layer = maskSlotLayer;
-        }
+        SceneManager.LoadScene("GameClearScene");
     }
 }

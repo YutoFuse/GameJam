@@ -9,7 +9,7 @@ public class deta_retu : MonoBehaviour
     {
         new int[] //stage1
         {
-            0, 0, 0,
+            1, 0, 0,
             0, 16, 0,
             0, 16, 0
         },
@@ -59,7 +59,6 @@ public class deta_retu : MonoBehaviour
 
         // �z���n��
         create.spriteIndices = stages[stageIndex];
-        create.stage = stageIndex;
 
         // �Ֆʂ��Đ���
         create.CreateField();

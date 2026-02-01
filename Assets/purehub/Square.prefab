@@ -93,6 +93,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MaskSlotTrigger
   type: 0
   ownerFace: {fileID: 0}
+  snapPoint: {fileID: 0}
 --- !u!1 &1955970758251502322
 GameObject:
   m_ObjectHideFlags: 0
@@ -186,6 +187,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MaskSlotTrigger
   type: 1
   ownerFace: {fileID: 0}
+  snapPoint: {fileID: 0}
 --- !u!1 &4553852296728490398
 GameObject:
   m_ObjectHideFlags: 0
@@ -263,8 +265,8 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -27907267
+  m_SortingLayer: 2
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 4161603384465051721, guid: cbefa3c54655ed143a9abbdb7a9ba83e, type: 3}
@@ -364,8 +366,8 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -27907267
+  m_SortingLayer: 2
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
@@ -437,6 +439,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::face
   tekusutya: {fileID: 4200028133389184067}
+  isBlank: 0
   eye: 0
   kuti: 0
   maskEye: 0

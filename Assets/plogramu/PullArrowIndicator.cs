@@ -332,8 +332,14 @@ public class PullArrowIndicator : MonoBehaviour
         if (fromFace.maskEye || fromFace.maskMouth) fromFace.ClearMasks(true);
 
         // 元(from)を消す（持ったほうが消える）
-        if (deactivateOwnerRoot && myRoot != null)
+        if (deactivateOwnerRoot && myRoot != null) {
             myRoot.gameObject.SetActive(false);
+            field_create filed;
+            GameObject crate = GameObject.Find("field_Maneger");
+            filed = crate.GetComponent<field_create>();
+            filed.stick();
+        }
+    
         else
         {
             fromFace.tekusutya.sprite = null;
