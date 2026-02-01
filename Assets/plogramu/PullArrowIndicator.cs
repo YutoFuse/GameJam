@@ -324,44 +324,10 @@ public class PullArrowIndicator : MonoBehaviour
             d
         );
 
-
-        bool eyeOK   = eyeMasked   || (fromFace.eye  == toFace.eye);
-        bool mouthOK = mouthMasked || (fromFace.kuti == toFace.kuti);
-
-        if (!eyeOK || !mouthOK) return;
-
-        // 成功：指した方(to)に移す
-        toFace.tekusutya.sprite = fromFace.tekusutya.sprite;
-        toFace.tekusutya.enabled = (toFace.tekusutya.sprite != null);
-        toFace.eye  = fromFace.eye;
-        toFace.kuti = fromFace.kuti;
-
-        if (toFace.maskEye || toFace.maskMouth) toFace.ClearMasks(true);
-        if (fromFace.maskEye || fromFace.maskMouth) fromFace.ClearMasks(true);
-
-        // 元(from)を消す（持ったほうが消える）
-        if (deactivateOwnerRoot && myRoot != null) {
-            
-            AudioManager.instance.PlaySE(AudioManager.instance.ActionSE);
-           // _system.Play();
-            field_create filed;
-            GameObject crate = GameObject.Find("field_Maneger");
-            filed = crate.GetComponent<field_create>();
-            filed.stick();
-
-            myRoot.gameObject.SetActive(false);
-        }
-    
-        else
-        {
-            fromFace.tekusutya.sprite = null;
-            fromFace.tekusutya.enabled = false;
-        }
         field_create filed;
         GameObject crate = GameObject.Find("field_Maneger");
         filed = crate.GetComponent<field_create>();
         filed.stick();
-
     }
 
 
