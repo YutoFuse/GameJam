@@ -404,7 +404,6 @@ public class field_create : MonoBehaviour
 
     private void ShiftOnlyIsolatedTowardAnchor(List<Vector2Int> originalComp, Vector2Int dir, Vector2Int anchor)
     {
-        Debug.Log("maidmai");
         stick();
 
         if (originalComp == null || originalComp.Count == 0) return;
