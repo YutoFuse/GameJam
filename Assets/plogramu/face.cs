@@ -30,6 +30,8 @@ public class face : MonoBehaviour
 
     public void AttachMask(SlotType type, GameObject maskObj)
     {
+        if (IsBlank) return;
+        
         if (type == SlotType.Eye)
         {
             maskEye = true;
