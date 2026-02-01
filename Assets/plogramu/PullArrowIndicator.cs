@@ -296,57 +296,51 @@ public class PullArrowIndicator : MonoBehaviour
         if (dir == DragDirection.None) return;
         if (target == null) return;
 
-        Transform ownerRoot = this.ownerRoot != null ? this.ownerRoot : transform.root;
-        Transform targetRoot = target.transform;
+        Transform myRoot = this.ownerRoot != null ? this.ownerRoot : transform.root;
 
-        face fromFace = ownerRoot.GetComponentInChildren<face>(true);
-        face toFace = target.GetComponentInParent<face>(true);
+        face fromFace = myRoot.GetComponentInChildren<face>(true);
+        face toFace   = target.GetComponentInParent<face>(true);
 
-        // 自分自身を参照している場合は何もしない
         if (fromFace == null || toFace == null) return;
-        if (fromFace == toFace) return;
         if (fromFace.tekusutya == null || toFace.tekusutya == null) return;
 
-        // ★ マスク考慮の一致判定
-        bool eyeMasked = fromFace.maskEye || toFace.maskEye;
-        bool mouthMasked = fromFace.maskMouth || toFace.maskMouth;
-        bool eyeOK = eyeMasked || (fromFace.eye == toFace.eye);
-        bool mouthOK = mouthMasked || (fromFace.kuti == toFace.kuti);
-
-        // マスクされていない場合は完全一致のみ許可
-        if (!eyeMasked && fromFace.eye != toFace.eye) return;
-        if (!mouthMasked && fromFace.kuti != toFace.kuti) return;
-        if (!eyeOK || !mouthOK) return;
-
-        // 成功：見た目移動（刺されたほうが残る）
-        fromFace.tekusutya.sprite = toFace.tekusutya.sprite;
-        fromFace.tekusutya.enabled = (fromFace.tekusutya.sprite != null);
-
-        // 数値も移動
-        toFace.eye  = fromFace.eye;
-        toFace.kuti = fromFace.kuti;
-
-        // 成功したらマスクは外せる（対象側に付いているものは外して戻す）
-        if (toFace.maskEye || toFace.maskMouth) toFace.ClearMasks(true);
-        if (fromFace.maskEye || fromFace.maskMouth) fromFace.ClearMasks(true);
-
-        // 元を消す（持ったほうが消える）
-        if (deactivateOwnerRoot && ownerRoot != null)
+        // ✅追加：空白（eye=999,kuti=999）には絶対に何もしない
+        bool toIsBlank   = (toFace.eye == 999 && toFace.kuti == 999);
+        bool fromIsBlank = (fromFace.eye == 999 && fromFace.kuti == 999);
+        if (toIsBlank || fromIsBlank)
         {
-            ownerRoot.gameObject.SetActive(false);
-
-            field_create create;
-            GameObject field = GameObject.Find("field_Maneger");
-            create = field.GetComponent<field_create>();
-            create.stick();
-
+            Debug.Log($"[ApplyEffect] blocked because blank target. toIsBlank={toIsBlank} fromIsBlank={fromIsBlank}", this);
             return;
         }
 
-        fromFace.tekusutya.sprite = null;
-        fromFace.tekusutya.enabled = false;
+        // ★ マスク考慮の一致判定
+        bool eyeMasked   = fromFace.maskEye   || toFace.maskEye;
+        bool mouthMasked = fromFace.maskMouth || toFace.maskMouth;
 
+        bool eyeOK   = eyeMasked   || (fromFace.eye  == toFace.eye);
+        bool mouthOK = mouthMasked || (fromFace.kuti == toFace.kuti);
+
+        if (!eyeOK || !mouthOK) return;
+
+        // 成功：指した方(to)に移す
+        toFace.tekusutya.sprite = fromFace.tekusutya.sprite;
+        toFace.tekusutya.enabled = (toFace.tekusutya.sprite != null);
+        toFace.eye  = fromFace.eye;
+        toFace.kuti = fromFace.kuti;
+
+        if (toFace.maskEye || toFace.maskMouth) toFace.ClearMasks(true);
+        if (fromFace.maskEye || fromFace.maskMouth) fromFace.ClearMasks(true);
+
+        // 元(from)を消す（持ったほうが消える）
+        if (deactivateOwnerRoot && myRoot != null)
+            myRoot.gameObject.SetActive(false);
+        else
+        {
+            fromFace.tekusutya.sprite = null;
+            fromFace.tekusutya.enabled = false;
+        }
     }
+
 
     private Vector3 GetMouseWorld()
     {

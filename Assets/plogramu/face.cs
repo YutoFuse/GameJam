@@ -4,6 +4,10 @@ public class face : MonoBehaviour
 {
     public SpriteRenderer tekusutya;
 
+    public bool isBlank;
+
+    public bool CanReceiveMask => !isBlank; 
+
     // 既にある前提（あなたのPullArrowIndicatorが参照している）
     public int eye;
     public int kuti;
