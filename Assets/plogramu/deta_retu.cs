@@ -9,14 +9,14 @@ public class deta_retu : MonoBehaviour
     {
         new int[] //stage1
         {
-            1, 0, 0,
-            0, 16, 0,
-            0, 16, 0
+            16, 16, 16,
+            0, 0, 16,
+            16, 16, 16
         },
         new int[] //stage2
         {
             16, 16, 16,
-            16, 1, 2,
+            16, 1, 3,
             16, 16, 16
         },
         new int[] //stage3
@@ -25,12 +25,45 @@ public class deta_retu : MonoBehaviour
             12, 14, 12,
             16, 16, 16
         },
+        
         new int[] //stage4
         {
-           16, 16, 16,
-            16, 16, 16,
+            3, 3, 3,
+            3, 1, 3,
+            3, 3, 3
+        },
+
+        new int[] //stage5
+        {
+            16, 5, 14,
+            16, 16, 13,
             16, 16, 16
+
         }
+        ,
+        new int[] //stage6
+        {
+             4, 5, 16,
+            16, 5, 4,
+            16, 5, 16
+
+        }
+        ,
+        new int[] //stage7
+        {
+           16, 8, 16,
+            1, 5, 1,
+            16,5, 16
+        }
+        ,
+        new int[] //stage8
+        {
+           4, 16, 4,
+            12, 16, 14,
+            4, 16, 4
+        }
+        
+       
 
     };
     private void Start()
