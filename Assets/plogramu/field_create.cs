@@ -59,10 +59,10 @@ public class field_create : MonoBehaviour
 
                 // マス生成
                 GameObject obj = Instantiate(face_image, parent);
-                GameObject back = Instantiate(background, parent2);
+             //   GameObject back = Instantiate(background, parent2);
 
                 obj.transform.localPosition = pos;
-                back.transform.localPosition = pos;
+               // back.transform.localPosition = pos;
 
                 // face コンポーネント取得
                 face img = obj.GetComponentInChildren<face>(true);

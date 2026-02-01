@@ -12,6 +12,8 @@ public class PullArrowIndicator : MonoBehaviour
     [System.Serializable]
     public class PullReleasedTargetEvent : UnityEvent<PullArrowIndicator, DragDirection, Collider2D> { }
 
+    [SerializeField] private ParticleSystem _system;
+
     [Header("Owner (Target)")]
     [SerializeField] private Transform owner;              // セルの中心（通常は親）
     [SerializeField] private Collider2D ownerCollider;     // セルのCollider2D（クリック開始判定）
@@ -333,11 +335,15 @@ public class PullArrowIndicator : MonoBehaviour
 
         // 元(from)を消す（持ったほうが消える）
         if (deactivateOwnerRoot && myRoot != null) {
-            myRoot.gameObject.SetActive(false);
+            
+            AudioManager.instance.PlaySE(AudioManager.instance.ActionSE);
+           // _system.Play();
             field_create filed;
             GameObject crate = GameObject.Find("field_Maneger");
             filed = crate.GetComponent<field_create>();
             filed.stick();
+
+            myRoot.gameObject.SetActive(false);
         }
     
         else
