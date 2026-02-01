@@ -18,11 +18,15 @@ public class ButtonTitle : MonoBehaviour
 
     public void tyutoriaru()
     {
-        SceneManager.LoadScene("TitleScene");
+        SceneManager.LoadScene("Tutorial");
     }
 
     public void GoNextStageClickButton()
     {
         //SceneManager.LoadScene("Game");
+    } 
+    public void GoCreditClickButton()
+    {
+        SceneManager.LoadScene("CreditScene");
     }
 }
