@@ -4,8 +4,21 @@ using UnityEngine.UI;
 
 public class MaskStockUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
+    [SerializeField] private int initialStock = 3;
+public int stock;
+
+private Image selfImage;
+
+private void Awake()
+{
+    if (worldCamera == null) worldCamera = Camera.main;
+    selfImage = GetComponent<Image>();
+
+    stock = initialStock;
+    RefreshCountUI();
+}
+
     [Header("Stock")]
-     public int stock = 3;
 
     [Tooltip("0,1,2,3...の順に入れる（Assets/image/Numbers のSprite）")]
     [SerializeField] private Sprite[] numberSprites; // index=残数
@@ -24,11 +37,6 @@ public class MaskStockUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
     private GameObject currentMask;
     private bool dragging;
 
-    private void Awake()
-    {
-        if (worldCamera == null) worldCamera = Camera.main;
-        RefreshCountUI();
-    }
 
     public void OnBeginDrag(PointerEventData eventData)
     {
@@ -114,16 +122,13 @@ public class MaskStockUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
     
     public void reset_mask()
     {
-        stock = 3;
+        stock = initialStock;
         RefreshCountUI();
 
-        // 盤面上のマスクを全削除
-        if (worldParent != null)
-        {
-            foreach (Transform child in worldParent)
-            {
-                Destroy(child.gameObject);
-            }
-        }
+        if (selfImage != null) selfImage.raycastTarget = true;
+
+        dragging = false;
+        currentMask = null;
     }
+
 }
