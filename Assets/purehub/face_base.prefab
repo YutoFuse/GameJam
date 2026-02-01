@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 1030146420511944668}
   - component: {fileID: 7218350448599087835}
   - component: {fileID: 4357716558509590665}
+  - component: {fileID: 4041834383913964357}
   m_Layer: 0
   m_Name: face_base
   m_TagString: Untagged
@@ -96,6 +97,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::face
   tekusutya: {fileID: 1420910461852478509}
+  isBlank: 0
   eye: 0
   kuti: 0
   maskEye: 0
@@ -104,6 +106,20 @@ MonoBehaviour:
   mouthSlot: {fileID: 0}
   eyeMaskObj: {fileID: 0}
   mouthMaskObj: {fileID: 0}
+--- !u!114 &4041834383913964357
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5889079195087322830}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6678780d9f029034698f3f71a0202494, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GridCoord
+  x: 0
+  y: 0
 --- !u!1 &7410557543520022883
 GameObject:
   m_ObjectHideFlags: 0
