@@ -10,8 +10,8 @@ public class deta_retu : MonoBehaviour
         new int[] //stage1
         {
             0, 0, 0,
-            0, 0, 0,
-            0, 0, 0
+            0, 16, 0,
+            0, 16, 0
         },
         new int[] //stage2
         {

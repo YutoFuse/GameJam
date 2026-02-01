@@ -108,10 +108,17 @@ public class PullArrowIndicator : MonoBehaviour
             Vector3 mouseWorld = GetMouseWorld();
             if (ownerCollider != null && ownerCollider.OverlapPoint(mouseWorld))
             {
-                Debug.Log("OK");
-                dragging = true;
-                Show(true);
-                UpdateArrow(mouseWorld);
+                face fromFace = ownerRoot.GetComponentInChildren<face>(true);
+                int now_eye=fromFace.eye;
+                int now_kuti=fromFace.kuti;
+                Debug.Log("eye" + now_eye + "kuti" + now_kuti);
+                if (now_eye != 999 && now_kuti != 999)
+                {
+
+                    dragging = true;
+                    Show(true);
+                    UpdateArrow(mouseWorld);
+                }
             }
         }
 
