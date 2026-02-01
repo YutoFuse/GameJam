@@ -323,11 +323,6 @@ public class PullArrowIndicator : MonoBehaviour
             new Vector2Int(targetCoord.x, targetCoord.y),
             d
         );
-
-        field_create filed;
-        GameObject crate = GameObject.Find("field_Maneger");
-        filed = crate.GetComponent<field_create>();
-        filed.stick();
     }
 
 

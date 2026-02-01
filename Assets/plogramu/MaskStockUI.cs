@@ -111,4 +111,10 @@ public class MaskStockUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
         // 0の時は非表示にしたいならここで調整
         // countImage.enabled = stock > 0;
     }
+    
+    public void reset_mask()
+    {
+        stock=3;
+        RefreshCountUI();
+    }
 }

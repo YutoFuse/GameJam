@@ -22,7 +22,7 @@ public class field_create : MonoBehaviour
     [Header("Blank")]
     [SerializeField] private int blankSpriteIndex = 16; // 黒(空白)のindex
 
-    public int total;
+    int total;
     [HideInInspector] public int[] spriteIndices;
 
     // 盤面参照
@@ -44,6 +44,11 @@ public class field_create : MonoBehaviour
             Destroy(child.gameObject);
 
         total = width * height;
+
+        MaskStockUI mask;
+        GameObject stock = GameObject.Find("MaskImage");
+        mask = stock.GetComponent<MaskStockUI>();
+        mask.reset_mask();
 
         if (spriteIndices == null || spriteIndices.Length != total)
         {
@@ -95,6 +100,7 @@ public class field_create : MonoBehaviour
                 faceGrid[x, y] = f;
 
                 int spriteIndex = spriteIndices[index];
+                if (spriteIndices[index] == 16) { total--; }
                 SetCellBySpriteIndex(x, y, spriteIndex);
 
                 index++;
@@ -262,7 +268,7 @@ public class field_create : MonoBehaviour
         NormalizeAllBlanks();
 
         // もし「消したら残数減らす」ならここ
-        // stick();
+        
     }
 
 
@@ -362,7 +368,11 @@ public class field_create : MonoBehaviour
     // -----------------------------
     public void stick()
     {
+        AudioManager.instance.PlaySE(AudioManager.instance.ActionSE);
+        
+
         total--;
+        Debug.Log("total" + total);
         if (total <= 1)
         {
             Invoke(nameof(CLEAR), 1.0f);
@@ -394,6 +404,9 @@ public class field_create : MonoBehaviour
 
     private void ShiftOnlyIsolatedTowardAnchor(List<Vector2Int> originalComp, Vector2Int dir, Vector2Int anchor)
     {
+        Debug.Log("maidmai");
+        stick();
+
         if (originalComp == null || originalComp.Count == 0) return;
 
         // 「元々owner(from)に繋がってた集合」
