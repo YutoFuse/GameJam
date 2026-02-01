@@ -42,6 +42,12 @@ public class MaskSnapper : MonoBehaviour
                 continue;
             }
 
+            if (slot.ownerFace.IsBlank)
+            {
+                Debug.Log($"[MaskSnapper] slot owner is blank: {slot.name}", slot);
+                continue;
+            }
+
             // 既に埋まってるスロットは弾く
             if (slot.type == SlotType.Eye && slot.ownerFace.maskEye) continue;
             if (slot.type == SlotType.Mouth && slot.ownerFace.maskMouth) continue;
