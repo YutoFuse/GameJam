@@ -114,7 +114,16 @@ public class MaskStockUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
     
     public void reset_mask()
     {
-        stock=3;
+        stock = 3;
         RefreshCountUI();
+
+        // 盤面上のマスクを全削除
+        if (worldParent != null)
+        {
+            foreach (Transform child in worldParent)
+            {
+                Destroy(child.gameObject);
+            }
+        }
     }
 }
