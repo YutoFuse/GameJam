@@ -46,13 +46,13 @@ public class deta_retu : MonoBehaviour
         new int[] //stage7
         {
            16, 16, 16,
-            16, 7, 16,
+            16, 7, 7,
             16, 16, 16
         },
         new int[] //stage8
         {
            16, 16, 16,
-            16, 8, 16,
+            16, 8, 8,
             16, 16, 16
         }
     };

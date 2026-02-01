@@ -269,9 +269,9 @@ public class field_create : MonoBehaviour
         }
         
         NormalizeAllBlanks();
-
+        stick();
         // もし「消したら残数減らす」ならここ
-        
+
     }
 
 

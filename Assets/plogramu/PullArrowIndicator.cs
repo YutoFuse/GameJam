@@ -165,7 +165,7 @@ public class PullArrowIndicator : MonoBehaviour
 
             OnReleased?.Invoke(this, dir);
             OnReleasedWithTarget?.Invoke(this, dir, LastPointedCollider);
-            _system.Play();
+            //_system.Play();
             ApplyEffect(dir, LastPointedCollider);
         }
     }
