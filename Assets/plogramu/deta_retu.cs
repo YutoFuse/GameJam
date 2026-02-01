@@ -9,33 +9,38 @@ public class deta_retu : MonoBehaviour
     {
         new int[] //stage1
         {
-            0, 0, 0,
+            1, 0, 0,
             0, 16, 0,
             0, 16, 0
         },
         new int[] //stage2
         {
-            1, 0, 0,
-            0, 1, 0,
-            0, 0, 1
+            16, 16, 16,
+            16, 1, 2,
+            16, 16, 16
         },
         new int[] //stage3
         {
-            1, 1, 1,
-            0, 0, 0,
-            1, 1, 1
+           16, 16, 16,
+            12, 14, 12,
+            16, 16, 16
         },
         new int[] //stage4
         {
-            1, 1, 1,
-            0, 0, 0,
-            1, 1, 1
+           16, 16, 16,
+            16, 16, 16,
+            16, 16, 16
         }
 
     };
     private void Start()
     {
         deta_shuuto(stage_now);//stage
+    }
+
+    public void Reset()
+    {
+        deta_shuuto(stage_now);
     }
 
 
@@ -45,18 +50,17 @@ public class deta_retu : MonoBehaviour
             GameObject.Find("field_Maneger")
             .GetComponent<field_create>();
 
-        // stageIndex ï¿½`ï¿½Fï¿½bï¿½N
+        // stageIndex E½`E½FE½bE½N
         if (stageIndex < 0 || stageIndex >= stages.Length)
         {
-            Debug.LogError("ï¿½ï¿½ï¿½İ‚ï¿½ï¿½È‚ï¿½ï¿½Xï¿½eï¿½[ï¿½Wï¿½Å‚ï¿½");
+            Debug.LogError("E½E½E½İ‚ï¿½E½È‚ï¿½E½XE½eE½[E½WE½Å‚ï¿½");
             return;
         }
 
-        // ï¿½zï¿½ï¿½ï¿½nï¿½ï¿½
+        // E½zE½E½E½nE½E½
         create.spriteIndices = stages[stageIndex];
-        create.stage = stageIndex;
 
-        // ï¿½Õ–Ê‚ï¿½ï¿½Äï¿½ï¿½ï¿½
+        // E½Õ–Ê‚ï¿½E½Äï¿½E½E½
         create.CreateField();
     }
 }

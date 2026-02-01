@@ -5,7 +5,7 @@ using UnityEngine.UI;
 public class MaskStockUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
     [Header("Stock")]
-    [SerializeField] private int stock = 3;
+     public int stock = 3;
 
     [Tooltip("0,1,2,3...の順に入れる（Assets/image/Numbers のSprite）")]
     [SerializeField] private Sprite[] numberSprites; // index=残数
@@ -100,7 +100,7 @@ public class MaskStockUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
         currentMask.transform.position = w;
     }
 
-    private void RefreshCountUI()
+    public void RefreshCountUI()
     {
         if (countImage == null) return;
         if (numberSprites == null || numberSprites.Length == 0) return;

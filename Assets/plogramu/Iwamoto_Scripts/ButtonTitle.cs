@@ -7,6 +7,8 @@ public class ButtonTitle : MonoBehaviour
     public void GameOsu()
     {
         SceneManager.LoadScene("field_kari");
+        AudioManager.instance.PlaySE(AudioManager.instance.ActionSE);
+
     }
     
     public void Osu()

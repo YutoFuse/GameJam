@@ -354,14 +354,19 @@ public class field_create : MonoBehaviour
     // -------------------------
     // クリア判定（そのまま）
     // -------------------------
+    // -----------------------------
+    // ステージクリア
+    // -----------------------------
     public void stick()
     {
         total--;
-        Debug.Log(total);
-        if (total == 1) Invoke(nameof(CLEAR), 1.0f);
+        if (total <= 1)
+        {
+            Invoke(nameof(CLEAR), 1.0f);
+        }
     }
 
-    void CLEAR()
+    private void CLEAR()
     {
         SceneManager.LoadScene("GameClearScene");
     }
