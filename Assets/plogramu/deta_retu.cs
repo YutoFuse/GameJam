@@ -1,29 +1,31 @@
+using Unity.VisualScripting;
+using UnityEditor.SceneManagement;
 using UnityEngine;
 
 public class deta_retu : MonoBehaviour
 {
+    public static int stage_now = 0;
     public int[][] stages =
     {
-        //チュートリアル用で
-        new int[] //stage1の変数
+        new int[] //stage1
         {
-            16, 16, 16,
-            16, 1, 1,
-            16, 16, 16
+            0, 0, 0,
+            0, 16, 0,
+            0, 16, 0
         },
-        new int[] //stage2の変数
+        new int[] //stage2
         {
             16, 16, 16,
             16, 1, 2,
             16, 16, 16
         },
-        new int[] //stage3の変数
+        new int[] //stage3
         {
            16, 16, 16,
             12, 14, 12,
             16, 16, 16
         },
-        new int[] //stage4の変数
+        new int[] //stage4
         {
            16, 16, 16,
             16, 16, 16,
@@ -33,9 +35,14 @@ public class deta_retu : MonoBehaviour
     };
     private void Start()
     {
-        int stage = 2;
-        deta_shuuto(stage-1);//stage
+        deta_shuuto(stage_now);//stage
     }
+
+    public void Reset()
+    {
+        deta_shuuto(stage_now);
+    }
+
 
     public void deta_shuuto(int stageIndex)
     {
@@ -43,17 +50,18 @@ public class deta_retu : MonoBehaviour
             GameObject.Find("field_Maneger")
             .GetComponent<field_create>();
 
-        // stageIndex チェック
+        // stageIndex ・ｽ`・ｽF・ｽb・ｽN
         if (stageIndex < 0 || stageIndex >= stages.Length)
         {
-            Debug.LogError("存在しないステージです");
+            Debug.LogError("・ｽ・ｽ・ｽﾝゑｿｽ・ｽﾈゑｿｽ・ｽX・ｽe・ｽ[・ｽW・ｽﾅゑｿｽ");
             return;
         }
 
-        // 配列を渡す
+        // ・ｽz・ｽ・ｽ・ｽn・ｽ・ｽ
         create.spriteIndices = stages[stageIndex];
+        create.stage = stageIndex;
 
-        // 盤面を再生成
+        // ・ｽﾕ面ゑｿｽ・ｽﾄ撰ｿｽ・ｽ・ｽ
         create.CreateField();
     }
 }

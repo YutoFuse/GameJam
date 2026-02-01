@@ -32,7 +32,7 @@ public class PullArrowIndicator : MonoBehaviour
     [SerializeField] private float pivotTipLocalX = 0.5f;
 
     [Header("Direction Decide")]
-    [SerializeField] private float deadZone = 0.15f;
+    [SerializeField] private float deadZone = 0.3f;
     [SerializeField] private float axisConeDeg = 30f;
 
     [Header("Target Detect (Neighbor only)")]
@@ -108,10 +108,17 @@ public class PullArrowIndicator : MonoBehaviour
             Vector3 mouseWorld = GetMouseWorld();
             if (ownerCollider != null && ownerCollider.OverlapPoint(mouseWorld))
             {
-                Debug.Log("OK");
-                dragging = true;
-                Show(true);
-                UpdateArrow(mouseWorld);
+                face fromFace = ownerRoot.GetComponentInChildren<face>(true);
+                int now_eye=fromFace.eye;
+                int now_kuti=fromFace.kuti;
+                Debug.Log("eye" + now_eye + "kuti" + now_kuti);
+                if (now_eye != 999 && now_kuti != 999)
+                {
+
+                    dragging = true;
+                    Show(true);
+                    UpdateArrow(mouseWorld);
+                }
             }
         }
 
@@ -128,7 +135,27 @@ public class PullArrowIndicator : MonoBehaviour
             DragDirection dir = DecideDirection(releaseWorld);
 
             center = (owner != null) ? owner.position : transform.position;
-            LastPointedCollider = DetectNeighbor(dir);
+            float dragDist = (releaseWorld - center).magnitude;
+            if (dragDist < deadZone)
+            {
+                // deadZone未満なら何も起こさない
+                dragging = false;
+                HideArrowHard();
+                OnReleased?.Invoke(this, dir);
+                OnReleasedWithTarget?.Invoke(this, dir, null);
+                return;
+            }
+
+            // 矢印の先端（tipPos）で判定する
+            Collider2D pointed = Physics2D.OverlapPoint(tipPos, targetLayer);
+            if (pointed != null && !IsOwnerCollider(pointed))
+            {
+                LastPointedCollider = pointed;
+            }
+            else
+            {
+                LastPointedCollider = null;
+            }
 
             dragging = false;
             HideArrowHard();
@@ -232,9 +259,13 @@ public class PullArrowIndicator : MonoBehaviour
             var c = hits[i].collider;
             if (c == null) continue;
             if (IsOwnerCollider(c)) continue;
+            // faceコンポーネントでfromFaceと同じものは除外
+            var ownerRoot = this.ownerRoot != null ? this.ownerRoot : transform.root;
+            face fromFace = ownerRoot.GetComponentInChildren<face>(true);
+            face toFace = c.GetComponentInParent<face>(true);
+            if (fromFace != null && toFace != null && fromFace == toFace) continue;
             return c;
         }
-
         return null;
     }
 
@@ -265,45 +296,51 @@ public class PullArrowIndicator : MonoBehaviour
         if (dir == DragDirection.None) return;
         if (target == null) return;
 
-        Transform ownerRoot = this.ownerRoot != null ? this.ownerRoot : transform.root;
-        Transform targetRoot = target.transform;
+        Transform myRoot = this.ownerRoot != null ? this.ownerRoot : transform.root;
 
-        face fromFace = ownerRoot.GetComponentInChildren<face>(true);
-        face toFace   = targetRoot.GetComponentInChildren<face>(true);
+        face fromFace = myRoot.GetComponentInChildren<face>(true);
+        face toFace   = target.GetComponentInParent<face>(true);
 
         if (fromFace == null || toFace == null) return;
         if (fromFace.tekusutya == null || toFace.tekusutya == null) return;
 
+        // ✅追加：空白（eye=999,kuti=999）には絶対に何もしない
+        bool toIsBlank   = (toFace.eye == 999 && toFace.kuti == 999);
+        bool fromIsBlank = (fromFace.eye == 999 && fromFace.kuti == 999);
+        if (toIsBlank || fromIsBlank)
+        {
+            Debug.Log($"[ApplyEffect] blocked because blank target. toIsBlank={toIsBlank} fromIsBlank={fromIsBlank}", this);
+            return;
+        }
+
         // ★ マスク考慮の一致判定
-        bool eyeMasked = fromFace.maskEye || toFace.maskEye;
+        bool eyeMasked   = fromFace.maskEye   || toFace.maskEye;
         bool mouthMasked = fromFace.maskMouth || toFace.maskMouth;
-        bool eyeOK = eyeMasked || (fromFace.eye == toFace.eye);
+
+        bool eyeOK   = eyeMasked   || (fromFace.eye  == toFace.eye);
         bool mouthOK = mouthMasked || (fromFace.kuti == toFace.kuti);
 
         if (!eyeOK || !mouthOK) return;
 
-        // 成功：見た目移動（指したほうが残る）
+        // 成功：指した方(to)に移す
         toFace.tekusutya.sprite = fromFace.tekusutya.sprite;
         toFace.tekusutya.enabled = (toFace.tekusutya.sprite != null);
-
-        // 数値も移動
         toFace.eye  = fromFace.eye;
         toFace.kuti = fromFace.kuti;
 
-        // 成功したらマスクは外せる（対象側に付いているものは外して戻す）
         if (toFace.maskEye || toFace.maskMouth) toFace.ClearMasks(true);
         if (fromFace.maskEye || fromFace.maskMouth) fromFace.ClearMasks(true);
 
-        // 元を消す（持ったほうが消える）
-        if (deactivateOwnerRoot && ownerRoot != null)
+        // 元(from)を消す（持ったほうが消える）
+        if (deactivateOwnerRoot && myRoot != null)
+            myRoot.gameObject.SetActive(false);
+        else
         {
-            ownerRoot.gameObject.SetActive(false);
-            return;
+            fromFace.tekusutya.sprite = null;
+            fromFace.tekusutya.enabled = false;
         }
-
-        fromFace.tekusutya.sprite = null;
-        fromFace.tekusutya.enabled = false;
     }
+
 
     private Vector3 GetMouseWorld()
     {
