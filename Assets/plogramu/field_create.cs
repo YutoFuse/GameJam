@@ -263,8 +263,11 @@ public class field_create : MonoBehaviour
         // (3) 孤立防止のシフト（アンカー=to）
         //     ※あなたが既に入れている「孤立だけ動かす」方式を使う
         // -------------------------
-        ShiftOnlyIsolatedTowardAnchor(originalComp, dir, anchor: to);
-
+        if (!IsAllNonBlankConnected())
+        {
+            ShiftComponentOneStep_Anchored(originalComp, dir, anchor: to);
+        }
+        
         NormalizeAllBlanks();
 
         // もし「消したら残数減らす」ならここ
@@ -512,6 +515,49 @@ public class field_create : MonoBehaviour
         }
 
         return moved;
+    }
+    // 盤面上の「空白じゃないマス」を全部集める
+    private List<Vector2Int> GetAllNonBlankCells()
+    {
+        var list = new List<Vector2Int>();
+        for (int y = 0; y < height; y++)
+        for (int x = 0; x < width; x++)
+        {
+            if (!IsBlank(x, y)) list.Add(new Vector2Int(x, y));
+        }
+        return list;
+    }
+
+    // 空白以外が「全部ひとつの連結成分」になっているか？
+    private bool IsAllNonBlankConnected()
+    {
+        var all = GetAllNonBlankCells();
+        if (all.Count <= 1) return true;
+
+        // どれか1つから BFS
+        var start = all[0];
+        var visited = new HashSet<Vector2Int>();
+        var q = new Queue<Vector2Int>();
+        q.Enqueue(start);
+        visited.Add(start);
+
+        while (q.Count > 0)
+        {
+            var p = q.Dequeue();
+            Try(p + Vector2Int.up);
+            Try(p + Vector2Int.down);
+            Try(p + Vector2Int.left);
+            Try(p + Vector2Int.right);
+        }
+
+        return visited.Count == all.Count;
+
+        void Try(Vector2Int n)
+        {
+            if (!InBounds(n.x, n.y)) return;
+            if (IsBlank(n.x, n.y)) return;
+            if (visited.Add(n)) q.Enqueue(n);
+        }
     }
 
 }
