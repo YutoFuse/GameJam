@@ -4,9 +4,9 @@ public class face : MonoBehaviour
 {
     public SpriteRenderer tekusutya;
 
-    public bool isBlank;
+    public bool IsBlank => (eye == 999 && kuti == 999);
 
-    public bool CanReceiveMask => !isBlank; 
+    // public bool CanReceiveMask => !isBlank; 
 
     // 既にある前提（あなたのPullArrowIndicatorが参照している）
     public int eye;

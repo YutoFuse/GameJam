@@ -298,26 +298,32 @@ public class PullArrowIndicator : MonoBehaviour
         if (dir == DragDirection.None) return;
         if (target == null) return;
 
-        Transform myRoot = this.ownerRoot != null ? this.ownerRoot : transform.root;
+        var board = field_create.Instance;
+        if (board == null) return;
 
-        face fromFace = myRoot.GetComponentInChildren<face>(true);
-        face toFace   = target.GetComponentInParent<face>(true);
+        Transform fromRoot = this.ownerRoot != null ? this.ownerRoot : transform.root;
+        var fromCoord = fromRoot.GetComponent<GridCoord>();
+        if (fromCoord == null) return;
 
-        if (fromFace == null || toFace == null) return;
-        if (fromFace.tekusutya == null || toFace.tekusutya == null) return;
+        // targetのセルRoot（Square）側から座標を取る
+        var targetCoord = target.GetComponentInParent<GridCoord>();
+        if (targetCoord == null) return;
 
-        // ✅追加：空白（eye=999,kuti=999）には絶対に何もしない
-        bool toIsBlank   = (toFace.eye == 999 && toFace.kuti == 999);
-        bool fromIsBlank = (fromFace.eye == 999 && fromFace.kuti == 999);
-        if (toIsBlank || fromIsBlank)
+        Vector2Int d = dir switch
         {
-            Debug.Log($"[ApplyEffect] blocked because blank target. toIsBlank={toIsBlank} fromIsBlank={fromIsBlank}", this);
-            return;
-        }
+            DragDirection.Up => Vector2Int.up,
+            DragDirection.Down => Vector2Int.down,
+            DragDirection.Left => Vector2Int.left,
+            DragDirection.Right => Vector2Int.right,
+            _ => Vector2Int.zero
+        };
 
-        // ★ マスク考慮の一致判定
-        bool eyeMasked   = fromFace.maskEye   || toFace.maskEye;
-        bool mouthMasked = fromFace.maskMouth || toFace.maskMouth;
+        board.TryMergeAndShift(
+            new Vector2Int(fromCoord.x, fromCoord.y),
+            new Vector2Int(targetCoord.x, targetCoord.y),
+            d
+        );
+
 
         bool eyeOK   = eyeMasked   || (fromFace.eye  == toFace.eye);
         bool mouthOK = mouthMasked || (fromFace.kuti == toFace.kuti);
@@ -351,6 +357,11 @@ public class PullArrowIndicator : MonoBehaviour
             fromFace.tekusutya.sprite = null;
             fromFace.tekusutya.enabled = false;
         }
+        field_create filed;
+        GameObject crate = GameObject.Find("field_Maneger");
+        filed = crate.GetComponent<field_create>();
+        filed.stick();
+
     }
 
 
