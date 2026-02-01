@@ -9,14 +9,14 @@ public class deta_retu : MonoBehaviour
     {
         new int[] //stage1
         {
-            1, 0, 0,
-            0, 16, 0,
-            0, 16, 0
+            16, 16, 16,
+            0, 0, 16,
+            16, 16, 16
         },
         new int[] //stage2
         {
             16, 16, 16,
-            16, 1, 2,
+            16, 1, 3,
             16, 16, 16
         },
         new int[] //stage3
@@ -25,36 +25,46 @@ public class deta_retu : MonoBehaviour
             12, 14, 12,
             16, 16, 16
         },
+        
         new int[] //stage4
         {
-           16, 16, 16,
-            16, 4, 16,
-            16, 16, 16
+            3, 3, 3,
+            3, 1, 3,
+            3, 3, 3
         },
+
         new int[] //stage5
         {
-           16, 16, 16,
-            16, 5, 16,
+            16, 5, 14,
+            16, 16, 13,
             16, 16, 16
-        },
+
+        }
+        ,
         new int[] //stage6
         {
-           16, 16, 16,
-            16, 6, 16,
-            16, 16, 16
-        },
+             4, 5, 16,
+            16, 5, 4,
+            16, 5, 16
+
+        }
+        ,
         new int[] //stage7
         {
-           16, 16, 16,
-            16, 7, 7,
-            16, 16, 16
-        },
+
+
+           16, 8, 16,
+            1, 5, 1,
+            16,5, 16
+        }
+        ,
         new int[] //stage8
         {
-           16, 16, 16,
-            16, 8, 8,
-            16, 16, 16
+           4, 16, 4,
+            12, 16, 14,
+            4, 16, 4
         }
+        
     };
     private void Start()
     {
@@ -73,17 +83,17 @@ public class deta_retu : MonoBehaviour
             GameObject.Find("field_Maneger")
             .GetComponent<field_create>();
 
-        // stageIndex E½`E½FE½bE½N
+        // stageIndex ï¿½Eï¿½`ï¿½Eï¿½Fï¿½Eï¿½bï¿½Eï¿½N
         if (stageIndex < 0 || stageIndex >= stages.Length)
         {
-            Debug.LogError("E½E½E½İ‚ï¿½E½È‚ï¿½E½XE½eE½[E½WE½Å‚ï¿½");
+            Debug.LogError("ï¿½Eï¿½ï¿½Eï¿½ï¿½Eï¿½İ‚ï¿½ï¿½Eï¿½È‚ï¿½ï¿½Eï¿½Xï¿½Eï¿½eï¿½Eï¿½[ï¿½Eï¿½Wï¿½Eï¿½Å‚ï¿½");
             return;
         }
 
-        // E½zE½E½E½nE½E½
+        // ï¿½Eï¿½zï¿½Eï¿½ï¿½Eï¿½ï¿½Eï¿½nï¿½Eï¿½ï¿½Eï¿½
         create.spriteIndices = stages[stageIndex];
 
-        // E½Õ–Ê‚ï¿½E½Äï¿½E½E½
+        // ï¿½Eï¿½Õ–Ê‚ï¿½ï¿½Eï¿½Äï¿½ï¿½Eï¿½ï¿½Eï¿½
         create.CreateField();
     }
 }
