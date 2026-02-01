@@ -7,42 +7,47 @@ public class SlectToGame : MonoBehaviour
 
     public void GoGame1()
     {
-        SceneManager.LoadScene("TitleScene");
+        deta_retu.stage_now = 0;
+        SceneManager.LoadScene("min_stage");
     }
 
     public void GoGame2()
     {
-        SceneManager.LoadScene("Game1");
+        deta_retu.stage_now = 1;
+        SceneManager.LoadScene("min_stage");
     }
 
     public void GoGame3()
     {
-        SceneManager.LoadScene("Game1");
+        deta_retu.stage_now = 2;
+        SceneManager.LoadScene("min_stage");
     }
 
     public void GoGame4()
     {
-        SceneManager.LoadScene("Game1");
+        deta_retu.stage_now = 3;
+        SceneManager.LoadScene("min_stage");
     }
 
     public void GoGame5()
     {
-        SceneManager.LoadScene("Game1");
+        deta_retu.stage_now = 4;
+        SceneManager.LoadScene("min_stage");
     }
 
     public void GoGame6()
-    {
-        SceneManager.LoadScene("Game1");
+       {deta_retu.stage_now = 5;
+        SceneManager.LoadScene("min_stage");
     }
 
     public void GoGame7()
-    {
-        SceneManager.LoadScene("Game1");
+        {deta_retu.stage_now = 6;
+        SceneManager.LoadScene("min_stage");
     }
 
     public void GoGame8()
-    {
-        SceneManager.LoadScene("Game1");
+        {deta_retu.stage_now = 7;   
+        SceneManager.LoadScene("min_stage");
     }
 
     

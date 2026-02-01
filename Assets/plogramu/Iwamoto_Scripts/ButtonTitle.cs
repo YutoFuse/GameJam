@@ -6,17 +6,17 @@ public class ButtonTitle : MonoBehaviour
 {
     public void GameOsu()
     {
-        SceneManager.LoadScene("field_kari");
+        SceneManager.LoadScene("min_stage");
         AudioManager.instance.PlaySE(AudioManager.instance.ActionSE);
 
     }
     
-    public void Osu()
+    public void slect()
     {
         SceneManager.LoadScene("SelectScene");
     }
 
-    public void GoHomeClickButton()
+    public void tyutoriaru()
     {
         SceneManager.LoadScene("TitleScene");
     }

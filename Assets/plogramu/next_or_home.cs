@@ -26,6 +26,6 @@ public class next_or_home : MonoBehaviour
     public void go_home()
     {
         deta_retu.stage_now = 0;
-        SceneManager.LoadScene("　");//ここでホーム画面を宣言
+        SceneManager.LoadScene("TitleScene");//ここでホーム画面を宣言
     }
 }

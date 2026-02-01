@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
+using UnityEngine.Rendering.VirtualTexturing;
 
 public class PullArrowIndicator : MonoBehaviour
 {
@@ -164,7 +165,7 @@ public class PullArrowIndicator : MonoBehaviour
 
             OnReleased?.Invoke(this, dir);
             OnReleasedWithTarget?.Invoke(this, dir, LastPointedCollider);
-
+            _system.Play();
             ApplyEffect(dir, LastPointedCollider);
         }
     }
@@ -295,6 +296,7 @@ public class PullArrowIndicator : MonoBehaviour
 
     private void ApplyEffect(DragDirection dir, Collider2D target)
     {
+        
         if (dir == DragDirection.None) return;
         if (target == null) return;
 

@@ -63,8 +63,6 @@ public class deta_retu : MonoBehaviour
             4, 16, 4
         }
         
-       
-
     };
     private void Start()
     {
