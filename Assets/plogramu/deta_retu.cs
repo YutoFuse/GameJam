@@ -1,6 +1,6 @@
 using Unity.VisualScripting;
-using UnityEditor.SceneManagement;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class deta_retu : MonoBehaviour
 {
