@@ -20,7 +20,7 @@ public class next_or_home : MonoBehaviour
     public void next_stage()
     {
         deta_retu.stage_now++;
-        if (deta_retu.stage_now > 7)
+        if (deta_retu.stage_now > 8)
         {
             SceneManager.LoadScene("TitleScene");//次のステージを宣言 
         }
