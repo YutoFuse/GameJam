@@ -1,6 +1,6 @@
 using Unity.VisualScripting;
-using UnityEditor.SceneManagement;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class deta_retu : MonoBehaviour
 {
@@ -90,17 +90,15 @@ public class deta_retu : MonoBehaviour
             GameObject.Find("field_Maneger")
             .GetComponent<field_create>();
 
-        // stageIndex ?ｿｽE?ｿｽ`?ｿｽE?ｿｽF?ｿｽE?ｿｽb?ｿｽE?ｿｽN
+        // ステージ番号が範囲外なら0に戻す（ループ）
         if (stageIndex < 0 || stageIndex >= stages.Length)
         {
-            Debug.LogError("?ｿｽE?ｿｽ?ｿｽE?ｿｽ?ｿｽE?ｿｽﾝゑｿｽ?ｿｽE?ｿｽﾈゑｿｽ?ｿｽE?ｿｽX?ｿｽE?ｿｽe?ｿｽE?ｿｽ[?ｿｽE?ｿｽW?ｿｽE?ｿｽﾅゑｿｽ");
-            return;
+            stage_now = 0;
+            stageIndex = 0;
+            Debug.LogWarning("ステージ番号が範囲外なので最初に戻します。");
         }
 
-        // ?ｿｽE?ｿｽz?ｿｽE?ｿｽ?ｿｽE?ｿｽ?ｿｽE?ｿｽn?ｿｽE?ｿｽ?ｿｽE?ｿｽ
         create.spriteIndices = stages[stageIndex];
-
-        // ?ｿｽE?ｿｽﾕ面ゑｿｽ?ｿｽE?ｿｽﾄ撰ｿｽ?ｿｽE?ｿｽ?ｿｽE?ｿｽ
         create.CreateField();
     }
 }
