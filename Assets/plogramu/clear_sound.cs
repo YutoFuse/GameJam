@@ -1,12 +1,11 @@
 using UnityEngine;
 
-public class kari : MonoBehaviour
+public class clear_sound : MonoBehaviour
 {
-    public GameObject[] face;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        AudioManager.instance.PlaySE(AudioManager.instance.sykiinSE);
     }
 
     // Update is called once per frame

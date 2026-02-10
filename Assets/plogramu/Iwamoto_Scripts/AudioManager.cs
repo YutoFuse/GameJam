@@ -14,6 +14,7 @@ public class AudioManager : MonoBehaviour
     public AudioClip ActionSE;
     public AudioClip StartSE;
     public AudioClip GoalSE;
+    public AudioClip sykiinSE;
     //public AudioClip GameOverSE;
 
 

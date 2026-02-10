@@ -24,7 +24,7 @@ public class next_or_home : MonoBehaviour
         {
             SceneManager.LoadScene("TitleScene");//次のステージを宣言 
         }
-        else  SceneManager.LoadScene("field_kari 1");//次のステージを宣言
+        else  SceneManager.LoadScene("min_stage");//次のステージを宣言
         
     }
 

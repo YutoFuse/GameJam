@@ -1947,6 +1947,7 @@ MonoBehaviour:
   ActionSE: {fileID: 8300000, guid: 74662f43bfb40ea40b38ebcb2a90f3a3, type: 3}
   StartSE: {fileID: 8300000, guid: 62294edfddf349542b0c2974b34d0069, type: 3}
   GoalSE: {fileID: 8300000, guid: 3100708a9a31b2a49a544ac161bc2864, type: 3}
+  sykiinSE: {fileID: 8300000, guid: 60989955bccbd0e4abe2b79935db8ecf, type: 3}
 --- !u!4 &1960520084
 Transform:
   m_ObjectHideFlags: 0

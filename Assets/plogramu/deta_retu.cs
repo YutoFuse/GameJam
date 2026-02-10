@@ -63,8 +63,15 @@ public class deta_retu : MonoBehaviour
            4, 16, 4,
             12, 16, 14,
             4, 5, 4
+        },
+        new int[] //stage9
+        {
+            3, 0, 1,
+            1, 16, 3,
+            5, 1, 3
         }
-        
+
+
     };
     private void Start()
     {

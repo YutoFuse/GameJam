@@ -50,7 +50,13 @@ public class SlectToGame : MonoBehaviour
         SceneManager.LoadScene("min_stage");
     }
 
-    
+    public void GoGame9()
+    {
+        deta_retu.stage_now = 8;
+        SceneManager.LoadScene("min_stage");
+    }
+
+
 
 
 

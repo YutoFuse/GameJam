@@ -14,7 +14,7 @@ public class Particle_test : MonoBehaviour
     {
         if(Input.GetMouseButtonDown(0))
         {
-            _system.Play();
+           // _system.Play();
         }
     }
 }
