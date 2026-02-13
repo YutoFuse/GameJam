@@ -38730,6 +38730,11 @@ MonoBehaviour:
   parent: {fileID: 1504078999}
   blankSpriteIndex: 16
   spriteIndices: 100000001000000010000000100000000100000003000000100000001000000010000000
+  goalZoomDuration: 0.8
+  goalZoomFrameHeightPx: 540
+  minGoalOrthographicSize: 1.2
+  clearDelay: 1
+  followSmooth: 12
 --- !u!4 &1466791600
 Transform:
   m_ObjectHideFlags: 0

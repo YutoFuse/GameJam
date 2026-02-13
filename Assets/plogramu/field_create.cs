@@ -30,6 +30,15 @@ public class field_create : MonoBehaviour
     private GameObject[,] cellGO = new GameObject[width, height];
     private face[,] faceGrid = new face[width, height];
 
+    [Header("Goal Camera Settings")]
+    [SerializeField] private float goalZoomDuration = 0.35f;
+    [SerializeField] private float goalZoomFrameHeightPx = 540f;
+    [SerializeField] private float minGoalOrthographicSize = 1.2f;
+    [SerializeField] private float clearDelay = 1.0f;
+    [SerializeField] private float followSmooth = 12f;
+
+    private bool isGoalSequencePlaying;
+
     private void Awake()
     {
         Instance = this;
@@ -380,11 +389,74 @@ public class field_create : MonoBehaviour
 
         total--;
         Debug.Log("total" + total);
-        if (total <= 1)
+        if (total <= 1 && !isGoalSequencePlaying)
         {
-            Invoke(nameof(CLEAR), 1.0f);
+            StartCoroutine(PlayGoalSequence());
         }
     }
+
+    private System.Collections.IEnumerator PlayGoalSequence()
+    {
+        isGoalSequencePlaying = true;
+
+        Vector3 targetWorld = GetLastKakkunWorldPosition();
+        Camera cam = Camera.main;
+
+        if (cam != null)
+        {
+            yield return StartCoroutine(ZoomCameraToTarget(cam, targetWorld));
+        }
+
+        yield return new WaitForSeconds(Mathf.Max(0f, clearDelay - goalZoomDuration));
+        CLEAR();
+    }
+
+    private System.Collections.IEnumerator ZoomCameraToTarget(Camera cam, Vector3 targetWorld)
+    {
+        Vector3 startPos = cam.transform.position;
+        float startSize = cam.orthographicSize;
+
+        Vector3 endPos = new Vector3(targetWorld.x, targetWorld.y, startPos.z);
+
+        float screenHeight = Mathf.Max(1f, Screen.height);
+        float heightRatio = Mathf.Clamp(goalZoomFrameHeightPx / screenHeight, 0.05f, 1f);
+        float endSize = Mathf.Clamp(startSize * heightRatio, minGoalOrthographicSize, startSize);
+
+        float elapsed = 0f;
+        while (elapsed < goalZoomDuration)
+        {
+            elapsed += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsed / goalZoomDuration);
+            float eased = Mathf.SmoothStep(0f, 1f, t);
+
+            cam.transform.position = Vector3.Lerp(
+                cam.transform.position,
+                Vector3.Lerp(startPos, endPos, eased),
+                followSmooth * Time.deltaTime
+            );
+            cam.orthographicSize = Mathf.Lerp(startSize, endSize, eased);
+
+            yield return null;
+        }
+
+        cam.transform.position = endPos;
+        cam.orthographicSize = endSize;
+    }
+
+    private Vector3 GetLastKakkunWorldPosition()
+    {
+        for (int y = 0; y < height; y++)
+        for (int x = 0; x < width; x++)
+        {
+            if (!IsBlank(x, y) && cellGO[x, y] != null)
+            {
+                return cellGO[x, y].transform.position;
+            }
+        }
+
+        return transform.position;
+    }
+
 
     private void CLEAR()
     {
