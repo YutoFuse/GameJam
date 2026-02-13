@@ -5,10 +5,13 @@ public class BackgroundLooper : MonoBehaviour
     [Header("Assign Sprites (per stage)")]
     [SerializeField] private Sprite spriteA;
     [SerializeField] private Sprite spriteB;
+    [SerializeField] private Sprite[] Asprite;
+    [SerializeField] private Sprite[] Bsprite;
 
     [Header("SpriteRenderers")]
     [SerializeField] private SpriteRenderer srA;
     [SerializeField] private SpriteRenderer srB;
+    
 
     [Header("Scroll")]
     [SerializeField] private float speed = 2f;   // 左へ流れる速度（ワールド単位/秒）
@@ -39,6 +42,12 @@ public class BackgroundLooper : MonoBehaviour
         }
 
         ApplySprites();
+    }
+    private void Start()
+    {
+        int count;
+        count = deta_retu.stage_now / 3;
+        SetStageBackground(Asprite[count], Bsprite[count]);
     }
 
     /// ステージ開始時などに呼べば差し替え可能

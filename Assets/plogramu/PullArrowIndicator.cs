@@ -1,7 +1,6 @@
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
-using UnityEngine.Rendering.VirtualTexturing;
 
 public class PullArrowIndicator : MonoBehaviour
 {
@@ -12,8 +11,6 @@ public class PullArrowIndicator : MonoBehaviour
 
     [System.Serializable]
     public class PullReleasedTargetEvent : UnityEvent<PullArrowIndicator, DragDirection, Collider2D> { }
-
-    [SerializeField] private ParticleSystem _system;
 
     [Header("Owner (Target)")]
     [SerializeField] private Transform owner;              // セルの中心（通常は親）
@@ -165,7 +162,6 @@ public class PullArrowIndicator : MonoBehaviour
 
             OnReleased?.Invoke(this, dir);
             OnReleasedWithTarget?.Invoke(this, dir, LastPointedCollider);
-            //_system.Play();
             ApplyEffect(dir, LastPointedCollider);
         }
     }
@@ -323,7 +319,7 @@ public class PullArrowIndicator : MonoBehaviour
         board.TryMergeAndShift(
             new Vector2Int(fromCoord.x, fromCoord.y),
             new Vector2Int(targetCoord.x, targetCoord.y),
-            d
+            d   
         );
     }
 

@@ -22,7 +22,7 @@ public class mause : MonoBehaviour
         {
             _system.transform.position = target;
             Debug.Log(target);
-            _system.Play();
+           // _system.Play();
         }
     }
 }

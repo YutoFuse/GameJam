@@ -5,6 +5,7 @@ using System.Collections.Generic;
 public class field_create : MonoBehaviour
 {
     public static field_create Instance { get; private set; }
+    [SerializeField] private ParticleSystem _system;
 
     public int stage;
 
@@ -269,6 +270,9 @@ public class field_create : MonoBehaviour
         }
         
         NormalizeAllBlanks();
+        Vector2 to2=new Vector2(to.x, to.y);
+        _system.transform.position = to2;
+        _system.Play();
         stick();
         // もし「消したら残数減らす」ならここ
 
