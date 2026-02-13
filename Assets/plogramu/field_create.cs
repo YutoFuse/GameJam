@@ -279,10 +279,10 @@ public class field_create : MonoBehaviour
         }
         
         NormalizeAllBlanks();
-        Vector2 to2=new Vector2(to.x, to.y);
-        _system.transform.position = to2;
-        _system.Play();
         stick();
+        Vector3 pos = cellGO[to.x, to.y].transform.position;
+        _system.transform.position = pos;
+        _system.Play();
         // もし「消したら残数減らす」ならここ
 
     }

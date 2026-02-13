@@ -165,7 +165,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 67f8e2759be82e94d96684b462b741da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PullArrowIndicator
-  _system: {fileID: 222398430}
   owner: {fileID: 0}
   ownerCollider: {fileID: 0}
   ownerRoot: {fileID: 0}
@@ -5530,7 +5529,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 67f8e2759be82e94d96684b462b741da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PullArrowIndicator
-  _system: {fileID: 1678434750}
   owner: {fileID: 0}
   ownerCollider: {fileID: 0}
   ownerRoot: {fileID: 0}
@@ -26049,7 +26047,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 67f8e2759be82e94d96684b462b741da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PullArrowIndicator
-  _system: {fileID: 395490835}
   owner: {fileID: 0}
   ownerCollider: {fileID: 0}
   ownerRoot: {fileID: 0}
@@ -31525,7 +31522,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 67f8e2759be82e94d96684b462b741da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PullArrowIndicator
-  _system: {fileID: 237136709}
   owner: {fileID: 0}
   ownerCollider: {fileID: 0}
   ownerRoot: {fileID: 0}
@@ -37715,7 +37711,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 67f8e2759be82e94d96684b462b741da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PullArrowIndicator
-  _system: {fileID: 1536037302}
   owner: {fileID: 0}
   ownerCollider: {fileID: 0}
   ownerRoot: {fileID: 0}
@@ -38454,7 +38449,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 67f8e2759be82e94d96684b462b741da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PullArrowIndicator
-  _system: {fileID: 1792815010}
   owner: {fileID: 0}
   ownerCollider: {fileID: 0}
   ownerRoot: {fileID: 0}
@@ -38706,6 +38700,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f7bf5738056777942a13f2421d9cb83a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::field_create
+  _system: {fileID: 185910492}
   stage: 0
   sprites:
   - {fileID: 4161603384465051721, guid: cbefa3c54655ed143a9abbdb7a9ba83e, type: 3}
@@ -54950,7 +54945,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 67f8e2759be82e94d96684b462b741da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PullArrowIndicator
-  _system: {fileID: 565139114}
   owner: {fileID: 0}
   ownerCollider: {fileID: 0}
   ownerRoot: {fileID: 0}
@@ -55239,7 +55233,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 67f8e2759be82e94d96684b462b741da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PullArrowIndicator
-  _system: {fileID: 65569745}
   owner: {fileID: 0}
   ownerCollider: {fileID: 0}
   ownerRoot: {fileID: 0}
@@ -55315,7 +55308,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 67f8e2759be82e94d96684b462b741da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PullArrowIndicator
-  _system: {fileID: 862154743}
   owner: {fileID: 0}
   ownerCollider: {fileID: 0}
   ownerRoot: {fileID: 0}
