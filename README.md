@@ -1,6 +1,14 @@
 # カックンパックン
 
-![ゲーム画面](画像のパス)
+<p align="center">
+  <img width="720" alt="ゲームプレイ画面" src="https://github.com/user-attachments/assets/ba01bce3-e47f-45eb-b71d-e7f5492fb3e7" />
+</p>
+
+## チュートリアル
+
+| 操作説明1 | 操作説明2 | 操作説明3 |
+|---|---|---|
+| <img width="250" alt="チュートリアル1" src="https://github.com/user-attachments/assets/619838d6-f95b-4585-9049-c8b175fb0d64" /> | <img width="250" alt="チュートリアル2" src="https://github.com/user-attachments/assets/d852be86-8ac3-461c-aa8a-89fb1f06ab86" /> | <img width="250" alt="チュートリアル3" src="https://github.com/user-attachments/assets/4597ad8e-aa32-4aee-8770-630b6f04bc1f" /> |
 
 ## 概要
 
@@ -49,14 +57,19 @@
 
 ## 工夫した点
 
-- 
+### プランナー
+- プログラマーとデザイナーに仕事が無い時間を無くすために、仕様内容を1日目にほぼ固めて伝達した。
+- チーム制作が初めての方が多かったので、伝達手段もホワイトボードなどのみんなが話し合いながら確認できるものを選んだ。
+
+### プログラマー
+- できるだけプランナーやメンバーに設計・用途が伝わるよう、インスペクターの表示内容や口頭・Discordでの情報伝達を意識した。
+- 短い時間の有効活用のため、コンフリクトが発生しないようにシーンやスクリプトを分けて作業した。
 
 ## 開発環境
 
 - Unity 6（6000.3.6f1）
 - C#
 - GitHub Desktop
-- 
 
 ## クレジット
 
